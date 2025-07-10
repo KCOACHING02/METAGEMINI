@@ -122,12 +122,11 @@
             <div class="form-group">
                 <label for="activity">Niveau d'activité physique</label>
                 <select id="activity">
-                    <option value="1.2">Sédentaire (peu ou pas d'exercice)</option>
-                    <option value="1.375">Légèrement actif (exercice 1-3 jours/semaine)</option>
-                    <option value="1.55">Modérément actif (exercice 3-5 jours/semaine)</option>
-                    <option value="1.725">Très actif (exercice 6-7 jours/semaine)</option>
-                    <option value="1.9">Extrêmement actif (travail physique et exercice intense)</option>
-                </select>
+                    <option value="1.2">Sédentaire (<5000 pas par jour)</option>
+                    <option value="1.375">Faiblement actif(ve) (Entre 5000 et 7499 pas par jour)</option>
+                    <option value="1.55">Modérément actif(ve) (entre 10000 et 12499 pas par jour)</option>
+                    <option value="1.725">Actif(ve) (> à 12500 pas par jour)</option>
+                    </select>
             </div>
             <button type="submit">Calculer mes besoins</button>
         </form>
@@ -157,7 +156,6 @@
 
             const tdee = bmr * activityFactor;
 
-            // Rediriger vers la page de résultats avec les données en paramètres, y compris le poids et la taille
             window.location.href = `resultats.html?bmr=${bmr.toFixed(0)}&tdee=${tdee.toFixed(0)}&weight=${weight}&height=${height}`;
         });
     </script>
