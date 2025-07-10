@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vos Résultats Personnalisés et Nos Programmes</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px M30px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #007bff;
+            margin: 0;
+        }
+        .results-summary {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .result-box {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            width: 45%;
+        }
+        .result-box h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        .result-value {
+            font-size: 3em;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .unit {
+            font-size: 1rem;
+            color: #777;
+        }
+        .explanation {
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .program-section {
+            text-align: center;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .program-cards {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 25px;
+            flex: 1;
+            min-width: 220px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+        .card h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        .card .calories {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 15px 0;
+            color: #28a745;
+        }
+        .card p {
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        .buy-button {
+            display: inline-block;
+            background-color: #ff7f50;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: background-color 0.3s;
+        }
+        .buy-button:hover {
+            background-color: #e66a3d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Voici Vos Résultats Personnalisés</h1>
+        </div>
+
+        <div class="results-summary">
+            <div class="result-box">
+                <h3>Métabolisme de Base (BMR)</h3>
+                <p class="result-value" id="bmr-result">0</p>
+                <p class="unit">Calories / jour</p>
+            </div>
+            <div class="result-box">
+                <h3>Besoins Journaliers (TDEE)</h3>
+                <p class="result-value" id="tdee-result">0</p>
+                <p class="unit">Calories / jour</p>
+            </div>
+        </div>
+
+        <p class="explanation">
+            Votre <strong>Métabolisme de Base</strong> correspond à l'énergie que votre corps dépense au repos.
+            Vos <strong>Besoins Journaliers</strong> incluent votre activité physique et représentent le total de calories que vous devez consommer pour maintenir votre poids actuel.
+        </p>
+
+        <div class="program-section">
+            <h2>Nos programmes sont faits pour vous !</h2>
+            <p>En fonction de vos résultats, voici les programmes que nous vous recommandons pour atteindre vos objectifs.</p>
+            <br>
+            <div class="program-cards">
+                <div class="card">
+                    <h3>Programme Perte de Poids 📉</h3>
+                    <div class="calories" id="loss-calories">0 kcal</div>
+                    <p>Un programme hypocalorique conçu pour une perte de poids saine et durable, sans sacrifier le plaisir.</p>
+                    <a href="#lien-vers-achat-perte" class="buy-button">Choisir ce programme</a>
+                </div>
+                <div class="card">
+                    <h3>Programme Maintien & Équilibre ⚖️</h3>
+                    <div class="calories" id="maintenance-calories">0 kcal</div>
+                    <p>Le programme idéal pour maintenir votre poids de forme tout en mangeant des plats variés et équilibrés.</p>
+                    <a href="#lien-vers-achat-maintien" class="buy-button">Choisir ce programme</a>
+                </div>
+                <div class="card">
+                    <h3>Programme Prise de Masse 💪</h3>
+                    <div class="calories" id="gain-calories">0 kcal</div>
+                    <p>Optimisé pour le développement musculaire, ce programme hypercalorique est riche en protéines et nutriments essentiels.</p>
+                    <a href="#lien-vers-achat-masse" class="buy-button">Choisir ce programme</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const params = new URLSearchParams(window.location.search);
+            const bmr = parseInt(params.get('bmr'));
+            const tdee = parseInt(params.get('tdee'));
+
+            if (!isNaN(bmr) && !isNaN(tdee)) {
+                // Afficher les résultats
+                document.getElementById('bmr-result').textContent = bmr;
+                document.getElementById('tdee-result').textContent = tdee;
+
+                // Calculer et afficher les calories des programmes
+                const lossCalories = tdee - 400;
+                const gainCalories = tdee + 400;
+
+                document.getElementById('loss-calories').textContent = `${lossCalories} kcal`;
+                document.getElementById('maintenance-calories').textContent = `${tdee} kcal`;
+                document.getElementById('gain-calories').textContent = `${gainCalories} kcal`;
+            } else {
+                // Rediriger si les données sont absentes
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+
+</body>
+</html>
