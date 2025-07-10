@@ -120,11 +120,7 @@
             border-radius: 5px;
             transform: rotate(30deg);
         }
-        #no-loss-goal {
-            background-color: #fffbe6;
-            border: 1px solid #ffe58f;
-        }
-
+        /* La section #no-loss-goal a été supprimée, donc le style peut être retiré si vous ne l'utilisez plus ailleurs */
     </style>
 </head>
 <body>
@@ -165,22 +161,16 @@
             <div id="other-programs-container" class="program-cards">
                 </div>
         </div>
-
-        <div class="section" id="no-loss-goal">
-            <h2>Un autre objectif en tête ?</h2>
-            <p>Nos programmes actuels sont optimisés pour la <strong>perte de poids (sèche)</strong>. Si votre objectif est de <strong>maintenir votre poids</strong> ou de faire une <strong>prise de masse</strong>, nous vous recommandons de consommer respectivement <strong id="maintenance-goal">0</strong> ou <strong id="gain-goal">0</strong> calories.</p>
-            <p>Contactez-nous pour un plan personnalisé ou restez à l'écoute pour nos futurs programmes !</p>
-        </div>
     </div>
 
     <script>
         // Base de données des programmes
         const programs = [
-            { id: 1, name: "10 jours pour sécher", price: "10,99€", calories: 1300, duration: "10 jours", description: "Idéal pour un démarrage rapide et une perte de poids visible en peu de temps.", link: "#LIEN_PRODUIT_1" },
-            { id: 2, name: "14 jours pour sécher", price: "14,99€", calories: 1300, duration: "14 jours", description: "Prolongez l'effort pour des résultats plus consolidés avec ce plan efficace.", link: "#LIEN_PRODUIT_2" },
-            { id: 3, name: "Défi 14 jours", price: "14,99€", calories: 1400, duration: "14 jours", description: "Un équilibre parfait entre un apport calorique modéré et une perte de poids efficace.", link: "#LIEN_PRODUIT_3" },
-            { id: 4, name: "Challenge 4 semaines", price: "19,99€", calories: 1500, duration: "4 semaines", description: "Un plan sur un mois pour transformer votre silhouette de manière durable.", link: "#LIEN_PRODUIT_4" },
-            { id: 5, name: "Challenge 7 semaines", price: "29,99€", calories: "Variable", duration: "7 semaines", description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.", link: "#LIEN_PRODUIT_5" }
+            { id: 1, name: "10 jours pour sécher", price: "10,99€", calories: 1300, duration: "10 jours", description: "Idéal pour un démarrage rapide et une perte de poids visible en peu de temps.", link: "https://shop.beacons.ai/kcoaching/bfc42c3d-a1a0-42c9-82bc-395ddffcb3bc" },
+            { id: 2, name: "14 jours pour sécher", price: "14,99€", calories: 1300, duration: "14 jours", description: "Prolongez l'effort pour des résultats plus consolidés avec ce plan efficace.", link: "https://shop.beacons.ai/kcoaching/cf28c7c7-cbad-44c6-b3cd-59419c8163d3" },
+            { id: 3, name: "Défi 14 jours", price: "14,99€", calories: 1400, duration: "14 jours", description: "Un équilibre parfait entre un apport calorique modéré et une perte de poids efficace.", link: "https://shop.beacons.ai/kcoaching/5b5379d0-cd57-4068-87b3-8aa393fa4824" },
+            { id: 4, name: "Challenge 4 semaines", price: "19,99€", calories: 1500, duration: "4 semaines", description: "Un plan sur un mois pour transformer votre silhouette de manière durable.", link: "https://shop.beacons.ai/kcoaching/8d04e33c-a3c9-4e77-8e1d-5d4faa4d15ce" },
+            { id: 5, name: "Challenge 7 semaines", price: "29,99€", calories: "Variable", duration: "7 semaines", description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.", link: "https://shop.beacons.ai/kcoaching/5fee0cd5-b961-4699-b2c7-f73591d9bfbb" }
         ];
 
         // Fonction pour créer une carte de programme HTML
@@ -208,6 +198,7 @@
             const tdee = parseInt(params.get('tdee'));
 
             if (isNaN(tdee)) {
+                // Rediriger si TDEE n'est pas valide (vous pouvez ajuster la page de redirection)
                 window.location.href = 'index.html';
                 return;
             }
@@ -221,7 +212,7 @@
             let recommendedIds = [];
 
             if (tdee >= 1600 && tdee < 1800) {
-                // Pour un TDEE modéré, le programme à 1300kcal est idéal (déficit de 300-500)
+                // Pour un TDEE modéré, les programmes à 1300kcal sont idéaux (déficit de 300-500)
                 recommendedIds.push(1, 2); // 10 et 14 jours à 1300
                 recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
             } else if (tdee >= 1800 && tdee < 2000) {
@@ -237,7 +228,7 @@
                 recommendedIds.push(1); // 10 jours pour sécher
                 document.getElementById('main-recommendation').innerHTML = `
                     <h2>Pour un Départ Rapide</h2>
-                    <p class="program-cards">${createProgramCard(programs.find(p => p.id === 1), true)}</p>
+                    <div class="program-cards">${createProgramCard(programs.find(p => p.id === 1), true)}</div>
                     <p style="text-align:center; margin-top:15px;">Avec votre métabolisme, un programme très bas en calories est nécessaire pour une perte de poids efficace.</p>
                 `;
             }
@@ -246,14 +237,9 @@
             const challenge7Weeks = programs.find(p => p.id === 5);
             document.getElementById('challenge-7-weeks-container').innerHTML = createProgramCard(challenge7Weeks, true);
 
-
-            // Afficher les autres programmes (ceux qui n'ont pas été recommandés + le challenge de 7 semaines)
+            // Afficher les autres programmes (ceux qui n'ont pas été recommandés et qui ne sont pas le challenge de 7 semaines)
             const otherContainer = document.getElementById('other-programs-container');
             otherContainer.innerHTML = programs.filter(p => !recommendedIds.includes(p.id) && p.id !== 5).map(p => createProgramCard(p)).join('');
-
-            // Mettre à jour la section "Autre objectif"
-            document.getElementById('maintenance-goal').textContent = `${tdee} kcal`;
-            document.getElementById('gain-goal').textContent = `${tdee + 300} kcal`;
         });
     </script>
 
