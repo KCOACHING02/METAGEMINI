@@ -141,6 +141,36 @@
             border-radius: 5px;
             transform: rotate(30deg);
         }
+        .estimated-loss {
+            font-weight: 600;
+            color: #007bff; /* Blue color for the loss estimation */
+            margin-top: 5px;
+            margin-bottom: 15px; /* Added space below loss estimation */
+            min-height: 1.2em; /* Ensures consistent spacing even if no text */
+            text-align: center; /* Center the text */
+        }
+        /* Style for the estimation button */
+        .estimation-button {
+            background-color: #007bff; /* Blue */
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px; /* Space above button */
+            width: 100%;
+            max-width: 400px; /* Max width for button */
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .estimation-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
 
         /* Media Queries for responsiveness */
         @media (max-width: 600px) {
@@ -174,6 +204,9 @@
                 </div>
             </div>
             <p>Ce besoin journalier est la base pour définir votre stratégie. Pour perdre du poids, vous devez consommer moins de calories que ce montant.</p>
+
+            <button id="calculate-loss-button" class="estimation-button">Estimer ma perte de poids sur 3 mois</button>
+
         </div>
 
         <div class="section" id="main-recommendation">
@@ -216,6 +249,34 @@
             return "Obésité morbide ou massive";
         }
 
+        // Function to calculate estimated weight loss
+        function calculateEstimatedLoss(tdee, programCalories) {
+            const CALORIES_PER_KG_FAT = 7700; // Approximative calories in 1 kg of fat
+            const DAYS_IN_3_MONTHS = 90; // Approximation for 3 months
+
+            let dailyCaloricIntake;
+            if (programCalories === "Variable") {
+                // Assumption for "Challenge 7 semaines" with variable calories
+                // This is an assumed effective average intake for calculation purposes
+                // This value should aim to create a good deficit for weight loss.
+                dailyCaloricIntake = 1350; // Using a conservative but effective average
+            } else {
+                dailyCaloricIntake = programCalories;
+            }
+
+            const dailyDeficit = tdee - dailyCaloricIntake;
+
+            // Only calculate if there's a deficit
+            if (dailyDeficit <= 0) {
+                return "Pas de perte estimée (pas de déficit calorique)";
+            }
+
+            const totalDeficit = dailyDeficit * DAYS_IN_3_MONTHS;
+            const estimatedLossKg = totalDeficit / CALORIES_PER_KG_FAT;
+
+            return `~${estimatedLossKg.toFixed(1)} kg`; // Display 1 decimal place
+        }
+
         // Function to create an HTML program card
         function createProgramCard(program, isRecommended = false) {
             return `
@@ -231,7 +292,7 @@
                         <p>${program.description}</p>
                     </div>
                     <div class="card-price">${program.price}</div>
-                    <a href="${program.link}" class="buy-button">Choisir ce programme</a>
+                    <p class="estimated-loss" id="estimated-loss-${program.id}"></p> <a href="${program.link}" class="buy-button">Choisir ce programme</a>
                 </div>
             `;
         }
@@ -259,7 +320,7 @@
             document.getElementById('imc-result').textContent = imc.toFixed(1); // Display 1 decimal place
             document.getElementById('imc-category').textContent = getIMCCategory(imc);
 
-            // Recommendation logic (unchanged)
+            // Logique de recommandation (unchanged)
             const recommendedContainer = document.getElementById('recommended-program-container');
             let recommendedIds = [];
 
@@ -286,6 +347,25 @@
 
             const otherContainer = document.getElementById('other-programs-container');
             otherContainer.innerHTML = programs.filter(p => !recommendedIds.includes(p.id) && p.id !== 5).map(p => createProgramCard(p)).join('');
+
+            // Add event listener for the new calculation button
+            document.getElementById('calculate-loss-button').addEventListener('click', function() {
+                // TDEE is already available from URL params and parsed above
+                // const tdee = parseInt(params.get('tdee')); // No need to re-parse
+
+                if (isNaN(tdee)) {
+                    alert("Impossible de calculer l'estimation sans votre TDEE. Veuillez recommencer depuis la page précédente.");
+                    return;
+                }
+
+                programs.forEach(program => {
+                    const estimatedLossText = calculateEstimatedLoss(tdee, program.calories);
+                    const lossElement = document.getElementById(`estimated-loss-${program.id}`);
+                    if (lossElement) {
+                        lossElement.textContent = `Perte estimée sur 3 mois : ${estimatedLossText}`;
+                    }
+                });
+            });
         });
     </script>
 
