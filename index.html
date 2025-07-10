@@ -58,10 +58,9 @@
             display: none;
         }
         .gender-label {
-            display: flex; /* Permet d'aligner l'icône et le texte */
+            display: flex; /* Permet d'aligner l'icône */
             align-items: center; /* Centre verticalement */
             justify-content: center; /* Centre horizontalement */
-            gap: 8px; /* Espacement entre l'icône et le texte */
             background-color: #eee;
             color: #777;
             padding: 12px;
@@ -71,7 +70,7 @@
             transition: background-color 0.3s, color 0.3s;
         }
         .gender-label span.icon {
-            font-size: 1.5em; /* Taille de l'emoji */
+            font-size: 2.5em; /* Taille de l'emoji rendue plus grande pour être l'élément principal */
             line-height: 1; /* Assure que l'emoji ne décale pas la ligne */
         }
         input[type="radio"]:checked + .gender-label {
@@ -107,13 +106,13 @@
                     <div>
                         <input type="radio" id="homme" name="gender" value="male" checked>
                         <label for="homme" class="gender-label">
-                            <span class="icon">♂️</span> Homme
+                            <span class="icon">🧍‍♂️</span> 
                         </label>
                     </div>
                     <div>
                         <input type="radio" id="femme" name="gender" value="female">
                         <label for="femme" class="gender-label">
-                            <span class="icon">♀️</span> Femme
+                            <span class="icon">🧍‍♀️</span>
                         </label>
                     </div>
                 </div>
