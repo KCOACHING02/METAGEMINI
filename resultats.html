@@ -188,8 +188,7 @@
                 </div>
             </div>
             <p>Ce besoin journalier est la base pour définir votre stratégie. Pour perdre du poids, vous devez consommer moins de calories que ce montant.</p>
-
-            </div>
+        </div>
 
         <div class="section" id="main-recommendation">
             <h2>Votre Programme Idéal Pour Démarrer</h2>
@@ -238,17 +237,15 @@
 
             let dailyCaloricIntake;
             if (programCalories === "Variable") {
-                // Assumption for "Challenge 7 semaines" with variable calories
-                dailyCaloricIntake = 1350; // Using a conservative but effective average
+                dailyCaloricIntake = 1350; // Assumed effective average intake for calculation
             } else {
                 dailyCaloricIntake = programCalories;
             }
 
             const dailyDeficit = tdee - dailyCaloricIntake;
 
-            // Only calculate if there's a deficit
             if (dailyDeficit <= 0) {
-                return "Pas de perte estimée (pas de déficit calorique)";
+                return "Pas de perte estimée (pas de déficit calorique suffisant)";
             }
 
             const totalDeficit = dailyDeficit * DAYS_IN_3_MONTHS;
@@ -282,48 +279,47 @@
             const params = new URLSearchParams(window.location.search);
             const bmr = parseInt(params.get('bmr'));
             const tdee = parseInt(params.get('tdee'));
-            const weight = parseFloat(params.get('weight')); // Get weight
-            const height = parseFloat(params.get('height')); // Get height
+            const weight = parseFloat(params.get('weight'));
+            const height = parseFloat(params.get('height'));
 
-            // Basic validation and redirection if essential data is missing
             if (isNaN(tdee) || isNaN(weight) || isNaN(height)) {
                 window.location.href = 'index.html';
                 return;
             }
 
-            // Display BMR and TDEE results
             document.getElementById('bmr-result').textContent = bmr;
             document.getElementById('tdee-result').textContent = tdee;
 
-            // Calculate and display IMC
-            const heightInMeters = height / 100; // Convert height to meters for IMC calculation
+            const heightInMeters = height / 100;
             const imc = weight / (heightInMeters * heightInMeters);
-            document.getElementById('imc-result').textContent = imc.toFixed(1); // Display 1 decimal place for IMC
+            document.getElementById('imc-result').textContent = imc.toFixed(1);
             document.getElementById('imc-category').textContent = getIMCCategory(imc);
 
             // Logic for main program recommendation
             const recommendedContainer = document.getElementById('recommended-program-container');
-            let recommendedIds = [];
+            let recommendedProgramHTML = ''; // Utilisez une variable temporaire pour construire le HTML
 
             if (tdee >= 1600 && tdee < 1800) {
-                recommendedIds.push(1, 2); // 10 and 14 days at 1300 kcal
+                const program1 = programs.find(p => p.id === 1);
+                const program2 = programs.find(p => p.id === 2);
+                if (program1) recommendedProgramHTML += createProgramCard(program1, true);
+                if (program2) recommendedProgramHTML += createProgramCard(program2, true);
             } else if (tdee >= 1800 && tdee < 2000) {
-                recommendedIds.push(3); // Défi 14 days at 1400 kcal
+                const program3 = programs.find(p => p.id === 3);
+                if (program3) recommendedProgramHTML += createProgramCard(program3, true);
             } else if (tdee >= 2000) {
-                recommendedIds.push(4); // Challenge 4 weeks at 1500 kcal
-            } else {
-                // For lower TDEE, recommend the lowest calorie program
-                recommendedIds.push(1); // 10 days for drying
-                document.getElementById('main-recommendation').innerHTML = `
-                    <h2>Pour un Départ Rapide</h2>
-                    <div class="program-cards">${createProgramCard(programs.find(p => p.id === 1), true)}</div>
-                    <p style="text-align:center; margin-top:15px;">Avec votre métabolisme, un programme très bas en calories est nécessaire pour une perte de poids efficace.</p>
-                `;
+                const program4 = programs.find(p => p.id === 4);
+                if (program4) recommendedProgramHTML += createProgramCard(program4, true);
+            } else { // TDEE < 1600
+                const program1 = programs.find(p => p.id === 1);
+                if (program1) {
+                    recommendedProgramHTML = `
+                        ${createProgramCard(program1, true)}
+                        <p style="text-align:center; margin-top:15px; grid-column: 1 / -1;">Avec votre métabolisme, un programme très bas en calories est nécessaire pour une perte de poids efficace.</p>
+                    `;
+                }
             }
-            // Populate the recommended programs if the specific else block above didn't already
-            if (recommendedIds.length > 0 && recommendedContainer.innerHTML === '') {
-                recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
-            }
+            recommendedContainer.innerHTML = recommendedProgramHTML;
 
 
             // Always display the 7-week challenge as a featured recommendation
@@ -332,12 +328,11 @@
 
             // Display other programs (those not already recommended and not the 7-week challenge)
             const otherContainer = document.getElementById('other-programs-container');
-            otherContainer.innerHTML = programs.filter(p => !recommendedIds.includes(p.id) && p.id !== 5).map(p => createProgramCard(p)).join('');
+            const allRecommendedAndChallengeIds = (recommendedProgramHTML !== '' ? recommendedIds : []).concat([5]); // Fix for getting all IDs
+            otherContainer.innerHTML = programs.filter(p => !allRecommendedAndChallengeIds.includes(p.id)).map(p => createProgramCard(p)).join('');
 
-            // --- NOUVEAU : Calcul et affichage direct de la perte de poids au chargement ---
-            // Le bouton a été retiré, donc plus besoin d'addEventListener sur un bouton.
-            // Le calcul se fait pour tous les programmes dès que la page est prête.
-            if (!isNaN(tdee)) { // S'assurer que le TDEE est valide avant de calculer
+            // Calculate and display weight loss for ALL programs immediately
+            if (!isNaN(tdee)) {
                 programs.forEach(program => {
                     const estimatedLossText = calculateEstimatedLoss(tdee, program.calories);
                     const lossElement = document.getElementById(`estimated-loss-${program.id}`);
