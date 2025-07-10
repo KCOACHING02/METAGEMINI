@@ -236,17 +236,20 @@
     <script>
         // Base de données des programmes
         const programs = [
-            { id: 1, name: "10 jours pour sécher", price: "10,99€", calories: 1300, duration: "10 jours", description: "Idéal pour un démarrage rapide et une perte de poids visible en peu de temps.", link: "https://shop.beacons.ai/kcoaching/bfc42c3d-a1a0-42c9-82bc-395ddffcb3bc", imageUrl: "Blanc et Noir Recettes Pinterest Vidéo Épingle.png 1.jpg" },
-            { id: 2, name: "14 jours pour sécher", price: "14,99€", calories: 1300, duration: "14 jours", description: "Prolongez l'effort pour des résultats plus consolidés avec ce plan efficace.", link: "https://shop.beacons.ai/kcoaching/cf28c7c7-cbad-44c6-b3cd-59419c8163d3", imageUrl: "Blanc et Noir Recettes Pinterest Vidéo Épingle.zip - 2.jpg" },
-            { id: 3, name: "Défi 14 jours", price: "14,99€", calories: 1400, duration: "14 jours", description: "Un équilibre parfait entre un apport calorique modéré et une perte de poids efficace.", link: "https://shop.beacons.ai/kcoaching/5b5379d0-cd57-4068-87b3-8aa393fa4824", imageUrl: "Blanc et Noir Recettes Pinterest Vidéo Épingle.zip - 3 1.jpg" },
-            { id: 4, name: "Challenge 4 semaines", price: "19,99€", calories: 1500, duration: "4 semaines", description: "Un plan sur un mois pour transformer votre silhouette de manière durable.", link: "https://shop.beacons.ai/kcoaching/8d04e33c-a3c9-4e77-8e1d-5d4faa4d15ce", imageUrl: "Blanc et Noir Recettes Pinterest Vidéo Épingle.zip - 4 1.jpg" },
-            { id: 5, name: "Challenge 7 semaines", price: "29,99€", calories: "Variable", duration: "7 semaines", description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.", link: "https://shop.beacons.ai/kcoaching/5fee0cd5-b961-4699-b2c7-f73591d9bfbb", imageUrl: "10 JOURS POUR SECHER.jpg" }
+            { id: 1, name: "10 jours pour sécher", price: "10,99€", calories: 1300, duration: "10 jours", description: "Idéal pour un démarrage rapide et une perte de poids visible en peu de temps.", link: "https://shop.beacons.ai/kcoaching/bfc42c3d-a1a0-42c9-82bc-395ddffcb3bc", imageUrl: "10 JOURS POUR SECHER.PNG" },
+            { id: 2, name: "14 jours pour sécher", price: "14,99€", calories: 1300, duration: "14 jours", description: "Prolongez l'effort pour des résultats plus consolidés avec ce plan efficace.", link: "https://shop.beacons.ai/kcoaching/cf28c7c7-cbad-44c6-b3cd-59419c8163d3", imageUrl: "14 JOURS POUR SECHER.PNG" },
+            { id: 3, name: "Défi 14 jours", price: "14,99€", calories: 1400, duration: "14 jours", description: "Un équilibre parfait entre un apport calorique modéré et une perte de poids efficace.", link: "https://shop.beacons.ai/kcoaching/5b5379d0-cd57-4068-87b3-8aa393fa4824", imageUrl: "DEFI 14 JOURS.PNG" },
+            { id: 4, name: "Challenge 4 semaines", price: "19,99€", calories: 1500, duration: "4 semaines", description: "Un plan sur un mois pour transformer votre silhouette de manière durable.", link: "https://shop.beacons.ai/kcoaching/8d04e33c-a3c9-4e77-8e1d-5d4faa4d15ce", imageUrl: "CHALLENGE 4 SEMAINES.PNG" },
+            { id: 5, name: "Challenge 7 semaines", price: "29,99€", calories: "Variable", duration: "7 semaines", description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.", link: "https://shop.beacons.ai/kcoaching/5fee0cd5-b961-4699-b2c7-f73591d9bfbb", imageUrl: "CHALLENGE 7 SEMAINES.PNG" }
         ];
 
         // Function to determine the IMC category and apply specific colors
         function getIMCCategory(imc) {
             const imcBox = document.getElementById('imc-box');
             let categoryText = "";
+
+            // Remove any existing IMC class before adding a new one
+            imcBox.classList.remove('imc-underweight', 'imc-normal', 'imc-overweight', 'imc-obese', 'imc-severely-obese', 'imc-morbidly-obese');
 
             if (imc < 18.5) {
                 categoryText = "Insuffisance pondérale (maigreur)";
@@ -288,7 +291,7 @@
                 return "Pas de perte significative estimée (déficit calorique insuffisant)";
             }
 
-            const totalDeficit = dailyDeficit * DAYS_IN_3_MONTHS;
+            const totalDeficit = dailyCaloricIntake > 0 ? dailyDeficit * DAYS_IN_3_MONTHS : 0; // Ensure positive intake
             const estimatedLossKg = totalDeficit / CALORIES_PER_KG_FAT;
 
             if (estimatedLossKg < 0.5) { // If estimated loss is less than 500g
