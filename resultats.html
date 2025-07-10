@@ -1,247 +1,255 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vos Résultats et Programmes Recommandés</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-        }
-        .section {
-            background-color: #ffffff;
-            padding: 30px 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
-        }
-        .header {
-            text-align: center;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        h1, h2, h3 {
-            color: #2c3e50;
-        }
-        h1 { font-size: 2.2rem; color: #007bff; }
-        h2 { text-align: center; font-size: 1.8rem; margin-bottom: 30px; }
-        h3 { color: #007bff; }
+ <html lang="fr">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Vos Résultats et Programmes Recommandés</title>
+     <style>
+         body {
+             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+             background-color: #f4f7f6;
+             color: #333;
+             line-height: 1.6;
+             margin: 0;
+             padding: 20px;
+         }
+         .container {
+             max-width: 800px;
+             margin: 20px auto;
+         }
+         .section {
+             background-color: #ffffff;
+             padding: 30px 40px;
+             border-radius: 12px;
+             box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+             margin-bottom: 25px;
+         }
+         .header {
+             text-align: center;
+             border-bottom: 1px solid #eee;
+             padding-bottom: 20px;
+             margin-bottom: 30px;
+         }
+         h1, h2, h3 {
+             color: #2c3e50;
+         }
+         h1 { font-size: 2.2rem; color: #007bff; }
+         h2 { text-align: center; font-size: 1.8rem; margin-bottom: 30px; }
+         h3 { color: #007bff; }
 
-        .results-summary {
-            display: flex;
-            justify-content: space-around;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .result-box {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            width: 45%;
-        }
-        .result-box h3 { margin-top: 0; color: #555; font-size: 1rem; }
-        .result-value { font-size: 2.8em; font-weight: 700; color: #2c3e50; }
-        .unit { font-size: 1rem; color: #777; }
+         .results-summary {
+             display: flex;
+             justify-content: space-around;
+             text-align: center;
+             margin-bottom: 30px;
+         }
+         .result-box {
+             background-color: #f8f9fa;
+             padding: 20px;
+             border-radius: 8px;
+             width: 45%;
+         }
+         .result-box h3 { margin-top: 0; color: #555; font-size: 1rem; }
+         .result-value { font-size: 2.8em; font-weight: 700; color: #2c3e50; }
+         .unit { font-size: 1rem; color: #777; }
 
-        .program-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-        }
-        .card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-            position: relative;
-        }
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-        }
-        .card-content {
-            flex-grow: 1;
-        }
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-        .card-details {
-            font-size: 0.95rem;
-            color: #555;
-            margin-bottom: 15px;
-        }
-        .card-price {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #28a745;
-            margin-bottom: 15px;
-        }
-        .buy-button {
-            display: block;
-            background-color: #ff7f50;
-            color: white !important;
-            padding: 12px 20px;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 700;
-            margin-top: auto;
-            transition: background-color 0.3s;
-        }
-        .buy-button:hover {
-            background-color: #e66a3d;
-        }
-        .recommended-badge {
-            position: absolute;
-            top: 15px;
-            right: -10px;
-            background-color: #007bff;
-            color: white;
-            padding: 5px 15px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            border-radius: 5px;
-            transform: rotate(30deg);
-        }
-        /* La section #no-loss-goal a été supprimée, donc le style peut être retiré si vous ne l'utilisez plus ailleurs */
-    </style>
-</head>
-<body>
+         .program-cards {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+             gap: 25px;
+         }
+         .card {
+             background-color: #fff;
+             border: 1px solid #ddd;
+             border-radius: 10px;
+             display: flex;
+             flex-direction: column;
+             padding: 25px;
+             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+             transition: transform 0.3s, box-shadow 0.3s;
+             position: relative;
+         }
+         .card:hover {
+             transform: translateY(-8px);
+             box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+         }
+         .card-image {
+             width: 100%;
+             border-radius: 8px 8px 0 0;
+             margin-bottom: 15px;
+             object-fit: cover;
+             height: auto; /* Ajuster la hauteur automatiquement pour conserver les proportions */
+         }
+         .card-content {
+             flex-grow: 1;
+         }
+         .card-title {
+             font-size: 1.3rem;
+             font-weight: 600;
+             margin-top: 0;
+             margin-bottom: 10px;
+         }
+         .card-details {
+             font-size: 0.95rem;
+             color: #555;
+             margin-bottom: 15px;
+         }
+         .card-price {
+             font-size: 1.8rem;
+             font-weight: 700;
+             color: #28a745;
+             margin-bottom: 15px;
+         }
+         .buy-button {
+             display: block;
+             background-color: #ff7f50;
+             color: white !important;
+             padding: 12px 20px;
+             text-align: center;
+             text-decoration: none;
+             border-radius: 8px;
+             font-weight: 700;
+             margin-top: auto;
+             transition: background-color 0.3s;
+         }
+         .buy-button:hover {
+             background-color: #e66a3d;
+         }
+         .recommended-badge {
+             position: absolute;
+             top: 15px;
+             right: -10px;
+             background-color: #007bff;
+             color: white;
+             padding: 5px 15px;
+             font-size: 0.8rem;
+             font-weight: 700;
+             border-radius: 5px;
+             transform: rotate(30deg);
+         }
+         /* La section #no-loss-goal a été supprimée, donc le style peut être retiré si vous ne l'utilisez plus ailleurs */
+     </style>
+ </head>
+ <body>
 
-    <div class="container">
-        <div class="section header">
-            <h1>Vos Résultats Personnalisés</h1>
-            <div class="results-summary">
-                <div class="result-box">
-                    <h3>Métabolisme de Base</h3>
-                    <p class="result-value" id="bmr-result">0</p>
-                    <p class="unit">Calories / jour</p>
-                </div>
-                <div class="result-box">
-                    <h3>Maintien du Poids</h3>
-                    <p class="result-value" id="tdee-result">0</p>
-                    <p class="unit">Calories / jour</p>
-                </div>
-            </div>
-            <p>Ce besoin journalier est la base pour définir votre stratégie. Pour perdre du poids, vous devez consommer moins de calories que ce montant.</p>
-        </div>
+     <div class="container">
+         <div class="section header">
+             <h1>Vos Résultats Personnalisés</h1>
+             <div class="results-summary">
+                 <div class="result-box">
+                     <h3>Métabolisme de Base</h3>
+                     <p class="result-value" id="bmr-result">0</p>
+                     <p class="unit">Calories / jour</p>
+                 </div>
+                 <div class="result-box">
+                     <h3>Maintien du Poids</h3>
+                     <p class="result-value" id="tdee-result">0</p>
+                     <p class="unit">Calories / jour</p>
+                 </div>
+             </div>
+             <p>Ce besoin journalier est la base pour définir votre stratégie. Pour perdre du poids, vous devez consommer moins de calories que ce montant.</p>
+         </div>
 
-        <div class="section" id="main-recommendation">
-            <h2>Votre Programme Idéal Pour Démarrer</h2>
-            <div id="recommended-program-container" class="program-cards">
-                </div>
-        </div>
+         <div class="section" id="main-recommendation">
+             <h2>Votre Programme Idéal Pour Démarrer</h2>
+             <div id="recommended-program-container" class="program-cards">
+                 </div>
+         </div>
 
-        <div class="section" id="complete-challenge">
-             <h2>Notre Recommandation Phare : Le Défi Complet</h2>
-            <div id="challenge-7-weeks-container" class="program-cards">
-                </div>
-        </div>
+         <div class="section" id="complete-challenge">
+              <h2>Notre Recommandation Phare : Le Défi Complet</h2>
+             <div id="challenge-7-weeks-container" class="program-cards">
+                 </div>
+         </div>
 
 
-        <div class="section" id="other-options">
-            <h2>Toutes Nos Options Pour la Perte de Poids</h2>
-            <div id="other-programs-container" class="program-cards">
-                </div>
-        </div>
-    </div>
+         <div class="section" id="other-options">
+             <h2>Toutes Nos Options Pour la Perte de Poids</h2>
+             <div id="other-programs-container" class="program-cards">
+                 </div>
+         </div>
+     </div>
 
-    <script>
-        // Base de données des programmes
-        const programs = [
-            { id: 1, name: "10 jours pour sécher", price: "10,99€", calories: 1300, duration: "10 jours", description: "Idéal pour un démarrage rapide et une perte de poids visible en peu de temps.", link: "https://shop.beacons.ai/kcoaching/bfc42c3d-a1a0-42c9-82bc-395ddffcb3bc" },
-            { id: 2, name: "14 jours pour sécher", price: "14,99€", calories: 1300, duration: "14 jours", description: "Prolongez l'effort pour des résultats plus consolidés avec ce plan efficace.", link: "https://shop.beacons.ai/kcoaching/cf28c7c7-cbad-44c6-b3cd-59419c8163d3" },
-            { id: 3, name: "Défi 14 jours", price: "14,99€", calories: 1400, duration: "14 jours", description: "Un équilibre parfait entre un apport calorique modéré et une perte de poids efficace.", link: "https://shop.beacons.ai/kcoaching/5b5379d0-cd57-4068-87b3-8aa393fa4824" },
-            { id: 4, name: "Challenge 4 semaines", price: "19,99€", calories: 1500, duration: "4 semaines", description: "Un plan sur un mois pour transformer votre silhouette de manière durable.", link: "https://shop.beacons.ai/kcoaching/8d04e33c-a3c9-4e77-8e1d-5d4faa4d15ce" },
-            { id: 5, name: "Challenge 7 semaines", price: "29,99€", calories: "Variable", duration: "7 semaines", description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.", link: "https://shop.beacons.ai/kcoaching/5fee0cd5-b961-4699-b2c7-f73591d9bfbb" }
-        ];
+     <script>
+         // Base de données des programmes
+         const programs = [
+             { id: 1, name: "10 jours pour sécher", price: "10,99€", calories: 1300, duration: "10 jours", description: "Idéal pour un démarrage rapide et une perte de poids visible en peu de temps.", link: "https://shop.beacons.ai/kcoaching/bfc42c3d-a1a0-42c9-82bc-395ddffcb3bc", imageUrl: "IMAGE_2_URL" },
+             { id: 2, name: "14 jours pour sécher", price: "14,99€", calories: 1300, duration: "14 jours", description: "Prolongez l'effort pour des résultats plus consolidés avec ce plan efficace.", link: "https://shop.beacons.ai/kcoaching/cf28c7c7-cbad-44c6-b3cd-59419c8163d3", imageUrl: "IMAGE_3_URL" },
+             { id: 3, name: "Défi 14 jours", price: "14,99€", calories: 1400, duration: "14 jours", description: "Un équilibre parfait entre un apport calorique modéré et une perte de poids efficace.", link: "https://shop.beacons.ai/kcoaching/5b5379d0-cd57-4068-87b3-8aa393fa4824", imageUrl: "IMAGE_4_URL" },
+             { id: 4, name: "Challenge 4 semaines", price: "19,99€", calories: 1500, duration: "4 semaines", description: "Un plan sur un mois pour transformer votre silhouette de manière durable.", link: "https://shop.beacons.ai/kcoaching/8d04e33c-a3c9-4e77-8e1d-5d4faa4d15ce", imageUrl: "IMAGE_5_URL" },
+             { id: 5, name: "Challenge 7 semaines", price: "29,99€", calories: "Variable", duration: "7 semaines", description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.", link: "https://shop.beacons.ai/kcoaching/5fee0cd5-b961-4699-b2c7-f73591d9bfbb", imageUrl: "IMAGE_1_URL" }
+         ];
 
-        // Fonction pour créer une carte de programme HTML
-        function createProgramCard(program, isRecommended = false) {
-            return `
-                <div class="card">
-                    ${isRecommended ? '<div class="recommended-badge">Recommandé</div>' : ''}
-                    <div class="card-content">
-                        <h3 class="card-title">${program.name}</h3>
-                        <p class="card-details">
-                            <strong>Calories :</strong> ${program.calories === 'Variable' ? 'Progressives' : program.calories + ' kcal/jour'}<br>
-                            <strong>Durée :</strong> ${program.duration}
-                        </p>
-                        <p>${program.description}</p>
-                    </div>
-                    <div class="card-price">${program.price}</div>
-                    <a href="${program.link}" class="buy-button">Choisir ce programme</a>
-                </div>
-            `;
-        }
+         // Fonction pour créer une carte de programme HTML
+         function createProgramCard(program, isRecommended = false) {
+             return `
+                 <div class="card">
+                     ${isRecommended ? '<div class="recommended-badge">Recommandé</div>' : ''}
+                     ${program.imageUrl ? `<img src="${program.imageUrl}" alt="${program.name}" class="card-image">` : ''}
+                     <div class="card-content">
+                         <h3 class="card-title">${program.name}</h3>
+                         <p class="card-details">
+                             <strong>Calories :</strong> ${program.calories === 'Variable' ? 'Progressives' : program.calories + ' kcal/jour'}<br>
+                             <strong>Durée :</strong> ${program.duration}
+                         </p>
+                         <p>${program.description}</p>
+                     </div>
+                     <div class="card-price">${program.price}</div>
+                     <a href="${program.link}" class="buy-button">Choisir ce programme</a>
+                 </div>
+             `;
+         }
 
-        window.addEventListener('load', function() {
-            const params = new URLSearchParams(window.location.search);
-            const bmr = parseInt(params.get('bmr'));
-            const tdee = parseInt(params.get('tdee'));
+         window.addEventListener('load', function() {
+             const params = new URLSearchParams(window.location.search);
+             const bmr = parseInt(params.get('bmr'));
+             const tdee = parseInt(params.get('tdee'));
 
-            if (isNaN(tdee)) {
-                // Rediriger si TDEE n'est pas valide (vous pouvez ajuster la page de redirection)
-                window.location.href = 'index.html';
-                return;
-            }
+             if (isNaN(tdee)) {
+                 // Rediriger si TDEE n'est pas valide (vous pouvez ajuster la page de redirection)
+                 window.location.href = 'index.html';
+                 return;
+             }
 
-            // Afficher les résultats BMR et TDEE
-            document.getElementById('bmr-result').textContent = bmr;
-            document.getElementById('tdee-result').textContent = tdee;
+             // Afficher les résultats BMR et TDEE
+             document.getElementById('bmr-result').textContent = bmr;
+             document.getElementById('tdee-result').textContent = tdee;
 
-            // Logique de recommandation
-            const recommendedContainer = document.getElementById('recommended-program-container');
-            let recommendedIds = [];
+             // Logique de recommandation
+             const recommendedContainer = document.getElementById('recommended-program-container');
+             let recommendedIds = [];
 
-            if (tdee >= 1600 && tdee < 1800) {
-                // Pour un TDEE modéré, les programmes à 1300kcal sont idéaux (déficit de 300-500)
-                recommendedIds.push(1, 2); // 10 et 14 jours à 1300
-                recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
-            } else if (tdee >= 1800 && tdee < 2000) {
-                // Pour un TDEE un peu plus élevé, 1400kcal est parfait
-                recommendedIds.push(3); // Défi 14 jours à 1400
-                recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
-            } else if (tdee >= 2000) {
-                // Pour un TDEE élevé, 1500kcal crée un déficit significatif et efficace
-                recommendedIds.push(4); // Challenge 4 semaines à 1500
-                recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
-            } else {
-                // Pour les TDEE plus bas (<1600), le programme le moins calorique est le seul choix pour sécher
-                recommendedIds.push(1); // 10 jours pour sécher
-                document.getElementById('main-recommendation').innerHTML = `
-                    <h2>Pour un Départ Rapide</h2>
-                    <div class="program-cards">${createProgramCard(programs.find(p => p.id === 1), true)}</div>
-                    <p style="text-align:center; margin-top:15px;">Avec votre métabolisme, un programme très bas en calories est nécessaire pour une perte de poids efficace.</p>
-                `;
-            }
+             if (tdee >= 1600 && tdee < 1800) {
+                 // Pour un TDEE modéré, les programmes à 1300kcal sont idéaux (déficit de 300-500)
+                 recommendedIds.push(1, 2); // 10 et 14 jours à 1300
+                 recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
+             } else if (tdee >= 1800 && tdee < 2000) {
+                 // Pour un TDEE un peu plus élevé, 1400kcal est parfait
+                 recommendedIds.push(3); // Défi 14 jours à 1400
+                 recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
+             } else if (tdee >= 2000) {
+                 // Pour un TDEE élevé, 1500kcal crée un déficit significatif et efficace
+                 recommendedIds.push(4); // Challenge 4 semaines à 1500
+                 recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
+             } else {
+                 // Pour les TDEE plus bas (<1600), le programme le moins calorique est le seul choix pour sécher
+                 recommendedIds.push(1); // 10 jours pour sécher
+                 document.getElementById('main-recommendation').innerHTML = `
+                     <h2>Pour un Départ Rapide</h2>
+                     <div class="program-cards">${createProgramCard(programs.find(p => p.id === 1), true)}</div>
+                     <p style="text-align:center; margin-top:15px;">Avec votre métabolisme, un programme très bas en calories est nécessaire pour une perte de poids efficace.</p>
+                 `;
+             }
 
-            // Toujours afficher le challenge de 7 semaines
-            const challenge7Weeks = programs.find(p => p.id === 5);
-            document.getElementById('challenge-7-weeks-container').innerHTML = createProgramCard(challenge7Weeks, true);
+             // Toujours afficher le challenge de 7 semaines
+             const challenge7Weeks = programs.find(p => p.id === 5);
+             document.getElementById('challenge-7-weeks-container').innerHTML = createProgramCard(challenge7Weeks, true);
 
-            // Afficher les autres programmes (ceux qui n'ont pas été recommandés et qui ne sont pas le challenge de 7 semaines)
-            const otherContainer = document.getElementById('other-programs-container');
-            otherContainer.innerHTML = programs.filter(p => !recommendedIds.includes(p.id) && p.id !== 5).map(p => createProgramCard(p)).join('');
-        });
-    </script>
+             // Afficher les autres programmes (ceux qui n'ont pas été recommandés et qui ne sont pas le challenge de 7 semaines)
+             const otherContainer = document.getElementById('other-programs-container');
+             otherContainer.innerHTML = programs.filter(p => !recommendedIds.includes(p.id) && p.id !== 5).map(p => createProgramCard(p)).join('');
+         });
+     </script>
 
-</body>
-</html>
+ </body>
+ </html>
