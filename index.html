@@ -58,9 +58,9 @@
             display: none;
         }
         .gender-label {
-            display: flex; /* Permet d'aligner l'icône */
-            align-items: center; /* Centre verticalement */
-            justify-content: center; /* Centre horizontalement */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background-color: #eee;
             color: #777;
             padding: 12px;
@@ -70,14 +70,24 @@
             transition: background-color 0.3s, color 0.3s;
         }
         .gender-label span.icon {
-            font-size: 2.5em; /* Taille de l'emoji rendue plus grande pour être l'élément principal */
-            line-height: 1; /* Assure que l'emoji ne décale pas la ligne */
+            font-size: 2.5em;
+            line-height: 1;
         }
-        input[type="radio"]:checked + .gender-label {
-            background-color: #007bff;
+
+        /* Style pour l'homme sélectionné (reste bleu) */
+        input[type="radio"]#homme:checked + .gender-label {
+            background-color: #007bff; /* Bleu d'origine */
             color: white;
             font-weight: 700;
         }
+
+        /* Style pour la femme sélectionnée (nouveau rose) */
+        input[type="radio"]#femme:checked + .gender-label {
+            background-color: #ff69b4; /* Rose vif */
+            color: white;
+            font-weight: 700;
+        }
+
         button {
             width: 100%;
             padding: 15px;
@@ -112,8 +122,7 @@
                     <div>
                         <input type="radio" id="femme" name="gender" value="female">
                         <label for="femme" class="gender-label">
-                            <span class="icon">🧍‍♀️</span>
-                        </label>
+                            <span class="icon">💃</span> </label>
                     </div>
                 </div>
             </div>
