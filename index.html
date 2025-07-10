@@ -58,7 +58,10 @@
             display: none;
         }
         .gender-label {
-            display: block;
+            display: flex; /* Permet d'aligner l'icône et le texte */
+            align-items: center; /* Centre verticalement */
+            justify-content: center; /* Centre horizontalement */
+            gap: 8px; /* Espacement entre l'icône et le texte */
             background-color: #eee;
             color: #777;
             padding: 12px;
@@ -66,6 +69,10 @@
             text-align: center;
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
+        }
+        .gender-label span.icon {
+            font-size: 1.5em; /* Taille de l'emoji */
+            line-height: 1; /* Assure que l'emoji ne décale pas la ligne */
         }
         input[type="radio"]:checked + .gender-label {
             background-color: #007bff;
@@ -99,11 +106,15 @@
                 <div class="gender-group">
                     <div>
                         <input type="radio" id="homme" name="gender" value="male" checked>
-                        <label for="homme" class="gender-label">Homme</label>
+                        <label for="homme" class="gender-label">
+                            <span class="icon">♂️</span> Homme
+                        </label>
                     </div>
                     <div>
                         <input type="radio" id="femme" name="gender" value="female">
-                        <label for="femme" class="gender-label">Femme</label>
+                        <label for="femme" class="gender-label">
+                            <span class="icon">♀️</span> Femme
+                        </label>
                     </div>
                 </div>
             </div>
@@ -122,11 +133,12 @@
             <div class="form-group">
                 <label for="activity">Niveau d'activité physique</label>
                 <select id="activity">
-                    <option value="1.2">Sédentaire (<5000 pas par jour)</option>
-                    <option value="1.375">Faiblement actif(ve) (Entre 5000 et 7499 pas par jour)</option>
-                    <option value="1.55">Modérément actif(ve) (entre 10000 et 12499 pas par jour)</option>
-                    <option value="1.725">Actif(ve) (> à 12500 pas par jour)</option>
-                    </select>
+                    <option value="1.2">Sédentaire (<5000 pas par jour) 🛋️</option>
+                    <option value="1.375">Faiblement actif(ve) (Entre 5000 et 7499 pas par jour) 🚶</option>
+                    <option value="1.55">Modérément actif(ve) (entre 10000 et 12499 pas par jour) 🏃‍♀️</option>
+                    <option value="1.725">Actif(ve) (> à 12500 pas par jour) 🏋️‍♂️</option>
+                    <option value="1.9">Très actif(ve) (Travail physique intense / sportif professionnel) 🤸</option>
+                </select>
             </div>
             <button type="submit">Calculer mes besoins</button>
         </form>
