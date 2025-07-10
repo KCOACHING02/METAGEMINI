@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vos Résultats Personnalisés et Nos Programmes</title>
+    <title>Vos Résultats et Programmes Recommandés</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -16,10 +16,13 @@
         .container {
             max-width: 800px;
             margin: 20px auto;
+        }
+        .section {
             background-color: #ffffff;
             padding: 30px 40px;
             border-radius: 12px;
-            box-shadow: 0 8px M30px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
         }
         .header {
             text-align: center;
@@ -27,15 +30,18 @@
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
-        h1 {
-            color: #007bff;
-            margin: 0;
+        h1, h2, h3 {
+            color: #2c3e50;
         }
+        h1 { font-size: 2.2rem; color: #007bff; }
+        h2 { text-align: center; font-size: 1.8rem; margin-bottom: 30px; }
+        h3 { color: #007bff; }
+
         .results-summary {
             display: flex;
             justify-content: space-around;
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         .result-box {
             background-color: #f8f9fa;
@@ -43,156 +49,96 @@
             border-radius: 8px;
             width: 45%;
         }
-        .result-box h3 {
-            margin-top: 0;
-            color: #555;
-        }
-        .result-value {
-            font-size: 3em;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-        .unit {
-            font-size: 1rem;
-            color: #777;
-        }
-        .explanation {
-            font-size: 1.1rem;
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .program-section {
-            text-align: center;
-        }
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 30px;
-        }
+        .result-box h3 { margin-top: 0; color: #555; font-size: 1rem; }
+        .result-value { font-size: 2.8em; font-weight: 700; color: #2c3e50; }
+        .unit { font-size: 1rem; color: #777; }
+
         .program-cards {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
         }
         .card {
             background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 10px;
+            display: flex;
+            flex-direction: column;
             padding: 25px;
-            flex: 1;
-            min-width: 220px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
         }
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
-        .card h3 {
-            color: #007bff;
-            margin-top: 0;
+        .card-content {
+            flex-grow: 1;
         }
-        .card .calories {
-            font-size: 1.5rem;
+        .card-title {
+            font-size: 1.3rem;
             font-weight: 600;
-            margin: 15px 0;
-            color: #28a745;
+            margin-top: 0;
+            margin-bottom: 10px;
         }
-        .card p {
+        .card-details {
             font-size: 0.95rem;
-            margin-bottom: 20px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .card-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #28a745;
+            margin-bottom: 15px;
         }
         .buy-button {
-            display: inline-block;
+            display: block;
             background-color: #ff7f50;
-            color: white;
-            padding: 12px 25px;
+            color: white !important;
+            padding: 12px 20px;
+            text-align: center;
             text-decoration: none;
             border-radius: 8px;
             font-weight: 700;
+            margin-top: auto;
             transition: background-color 0.3s;
         }
         .buy-button:hover {
             background-color: #e66a3d;
         }
+        .recommended-badge {
+            position: absolute;
+            top: 15px;
+            right: -10px;
+            background-color: #007bff;
+            color: white;
+            padding: 5px 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 5px;
+            transform: rotate(30deg);
+        }
+        #no-loss-goal {
+            background-color: #fffbe6;
+            border: 1px solid #ffe58f;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="header">
-            <h1>Voici Vos Résultats Personnalisés</h1>
-        </div>
-
-        <div class="results-summary">
-            <div class="result-box">
-                <h3>Métabolisme de Base (BMR)</h3>
-                <p class="result-value" id="bmr-result">0</p>
-                <p class="unit">Calories / jour</p>
-            </div>
-            <div class="result-box">
-                <h3>Besoins Journaliers (TDEE)</h3>
-                <p class="result-value" id="tdee-result">0</p>
-                <p class="unit">Calories / jour</p>
-            </div>
-        </div>
-
-        <p class="explanation">
-            Votre <strong>Métabolisme de Base</strong> correspond à l'énergie que votre corps dépense au repos.
-            Vos <strong>Besoins Journaliers</strong> incluent votre activité physique et représentent le total de calories que vous devez consommer pour maintenir votre poids actuel.
-        </p>
-
-        <div class="program-section">
-            <h2>Nos programmes sont faits pour vous !</h2>
-            <p>En fonction de vos résultats, voici les programmes que nous vous recommandons pour atteindre vos objectifs.</p>
-            <br>
-            <div class="program-cards">
-                <div class="card">
-                    <h3>Programme Perte de Poids 📉</h3>
-                    <div class="calories" id="loss-calories">0 kcal</div>
-                    <p>Un programme hypocalorique conçu pour une perte de poids saine et durable, sans sacrifier le plaisir.</p>
-                    <a href="#lien-vers-achat-perte" class="buy-button">Choisir ce programme</a>
+        <div class="section header">
+            <h1>Vos Résultats Personnalisés</h1>
+            <div class="results-summary">
+                <div class="result-box">
+                    <h3>Métabolisme de Base</h3>
+                    <p class="result-value" id="bmr-result">0</p>
+                    <p class="unit">Calories / jour</p>
                 </div>
-                <div class="card">
-                    <h3>Programme Maintien & Équilibre ⚖️</h3>
-                    <div class="calories" id="maintenance-calories">0 kcal</div>
-                    <p>Le programme idéal pour maintenir votre poids de forme tout en mangeant des plats variés et équilibrés.</p>
-                    <a href="#lien-vers-achat-maintien" class="buy-button">Choisir ce programme</a>
-                </div>
-                <div class="card">
-                    <h3>Programme Prise de Masse 💪</h3>
-                    <div class="calories" id="gain-calories">0 kcal</div>
-                    <p>Optimisé pour le développement musculaire, ce programme hypercalorique est riche en protéines et nutriments essentiels.</p>
-                    <a href="#lien-vers-achat-masse" class="buy-button">Choisir ce programme</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        window.addEventListener('load', function() {
-            const params = new URLSearchParams(window.location.search);
-            const bmr = parseInt(params.get('bmr'));
-            const tdee = parseInt(params.get('tdee'));
-
-            if (!isNaN(bmr) && !isNaN(tdee)) {
-                // Afficher les résultats
-                document.getElementById('bmr-result').textContent = bmr;
-                document.getElementById('tdee-result').textContent = tdee;
-
-                // Calculer et afficher les calories des programmes
-                const lossCalories = tdee - 400;
-                const gainCalories = tdee + 400;
-
-                document.getElementById('loss-calories').textContent = `${lossCalories} kcal`;
-                document.getElementById('maintenance-calories').textContent = `${tdee} kcal`;
-                document.getElementById('gain-calories').textContent = `${gainCalories} kcal`;
-            } else {
-                // Rediriger si les données sont absentes
-                window.location.href = 'index.html';
-            }
-        });
-    </script>
-
-</body>
-</html>
+                <div class="result-box">
+                    <h3>Maintien du Poids</h3>
+                    <p class="result-value" id="tdee-result">0</p>
+                    <p class="unit">
