@@ -42,16 +42,30 @@
             justify-content: space-around;
             text-align: center;
             margin-bottom: 30px;
+            flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur petits écrans */
         }
         .result-box {
             background-color: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
-            width: 45%;
+            width: 45%; /* Ajusté pour laisser de l'espace pour l'IMC */
+            margin-bottom: 15px; /* Espace entre les boîtes sur petits écrans */
+        }
+        .result-box.imc {
+            width: 95%; /* L'IMC prendra plus de place, centré */
+            margin-top: 10px;
+            background-color: #e6f7ff; /* Couleur différente pour l'IMC */
+            border: 1px solid #91d5ff;
         }
         .result-box h3 { margin-top: 0; color: #555; font-size: 1rem; }
         .result-value { font-size: 2.8em; font-weight: 700; color: #2c3e50; }
         .unit { font-size: 1rem; color: #777; }
+        .imc-category {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            color: #333;
+        }
 
         .program-cards {
             display: grid;
@@ -75,10 +89,10 @@
         }
         .card-image {
             width: 100%;
+            height: 180px; /* Hauteur fixe pour les images */
             border-radius: 8px 8px 0 0;
             margin-bottom: 15px;
-            object-fit: cover;
-            height: auto; /* Ajuster la hauteur automatiquement pour conserver les proportions */
+            object-fit: cover; /* Recadre l'image pour couvrir la zone sans la déformer */
         }
         .card-content {
             flex-grow: 1;
@@ -127,6 +141,13 @@
             border-radius: 5px;
             transform: rotate(30deg);
         }
+
+        /* Media Queries pour la responsivité */
+        @media (max-width: 600px) {
+            .results-summary .result-box {
+                width: 100%; /* Les boîtes prennent toute la largeur sur petits écrans */
+            }
+        }
     </style>
 </head>
 <body>
@@ -144,6 +165,12 @@
                     <h3>Maintien du Poids</h3>
                     <p class="result-value" id="tdee-result">0</p>
                     <p class="unit">Calories / jour</p>
+                </div>
+                <div class="result-box imc">
+                    <h3>Votre Indice de Masse Corporelle (IMC)</h3>
+                    <p class="result-value" id="imc-result">0.0</p>
+                    <p class="unit">kg/m²</p>
+                    <p class="imc-category" id="imc-category"></p>
                 </div>
             </div>
             <p>Ce besoin journalier est la base pour définir votre stratégie. Pour perdre du poids, vous devez consommer moins de calories que ce montant.</p>
@@ -179,6 +206,16 @@
             { id: 5, name: "Challenge 7 semaines", price: "29,99€", calories: "Variable", duration: "7 semaines", description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.", link: "https://shop.beacons.ai/kcoaching/5fee0cd5-b961-4699-b2c7-f73591d9bfbb", imageUrl: "CHALLENGE 7 SEMAINES.PNG" }
         ];
 
+        // Fonction pour déterminer la catégorie IMC
+        function getIMCCategory(imc) {
+            if (imc < 18.5) return "Insuffisance pondérale (maigreur)";
+            if (imc >= 18.5 && imc < 25) return "Poids normal";
+            if (imc >= 25 && imc < 30) return "Surpoids";
+            if (imc >= 30 && imc < 35) return "Obésité modérée";
+            if (imc >= 35 && imc < 40) return "Obésité sévère";
+            return "Obésité morbide ou massive";
+        }
+
         // Fonction pour créer une carte de programme HTML
         function createProgramCard(program, isRecommended = false) {
             return `
@@ -203,9 +240,11 @@
             const params = new URLSearchParams(window.location.search);
             const bmr = parseInt(params.get('bmr'));
             const tdee = parseInt(params.get('tdee'));
+            const weight = parseFloat(params.get('weight')); // Récupérer le poids
+            const height = parseFloat(params.get('height')); // Récupérer la taille
 
-            if (isNaN(tdee)) {
-                // Rediriger si TDEE n'est pas valide (vous pouvez ajuster la page de redirection)
+            if (isNaN(tdee) || isNaN(weight) || isNaN(height)) {
+                // Rediriger si TDEE, poids ou taille ne sont pas valides
                 window.location.href = 'index.html';
                 return;
             }
@@ -214,25 +253,27 @@
             document.getElementById('bmr-result').textContent = bmr;
             document.getElementById('tdee-result').textContent = tdee;
 
-            // Logique de recommandation
+            // Calcul et affichage de l'IMC
+            const heightInMeters = height / 100; // Convertir la taille en mètres
+            const imc = weight / (heightInMeters * heightInMeters);
+            document.getElementById('imc-result').textContent = imc.toFixed(1); // Afficher 1 chiffre après la virgule
+            document.getElementById('imc-category').textContent = getIMCCategory(imc);
+
+            // Logique de recommandation (inchangée)
             const recommendedContainer = document.getElementById('recommended-program-container');
             let recommendedIds = [];
 
             if (tdee >= 1600 && tdee < 1800) {
-                // Pour un TDEE modéré, les programmes à 1300kcal sont idéaux (déficit de 300-500)
-                recommendedIds.push(1, 2); // 10 et 14 jours à 1300
+                recommendedIds.push(1, 2);
                 recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
             } else if (tdee >= 1800 && tdee < 2000) {
-                // Pour un TDEE un peu plus élevé, 1400kcal est parfait
-                recommendedIds.push(3); // Défi 14 jours à 1400
+                recommendedIds.push(3);
                 recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
             } else if (tdee >= 2000) {
-                // Pour un TDEE élevé, 1500kcal crée un déficit significatif et efficace
-                recommendedIds.push(4); // Challenge 4 semaines à 1500
+                recommendedIds.push(4);
                 recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
             } else {
-                // Pour les TDEE plus bas (<1600), le programme le moins calorique est le seul choix pour sécher
-                recommendedIds.push(1); // 10 jours pour sécher
+                recommendedIds.push(1);
                 document.getElementById('main-recommendation').innerHTML = `
                     <h2>Pour un Départ Rapide</h2>
                     <div class="program-cards">${createProgramCard(programs.find(p => p.id === 1), true)}</div>
@@ -240,11 +281,9 @@
                 `;
             }
 
-            // Toujours afficher le challenge de 7 semaines
             const challenge7Weeks = programs.find(p => p.id === 5);
             document.getElementById('challenge-7-weeks-container').innerHTML = createProgramCard(challenge7Weeks, true);
 
-            // Afficher les autres programmes (ceux qui n'ont pas été recommandés et qui ne sont pas le challenge de 7 semaines)
             const otherContainer = document.getElementById('other-programs-container');
             otherContainer.innerHTML = programs.filter(p => !recommendedIds.includes(p.id) && p.id !== 5).map(p => createProgramCard(p)).join('');
         });
