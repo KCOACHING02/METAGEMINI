@@ -42,19 +42,19 @@
             justify-content: space-around;
             text-align: center;
             margin-bottom: 30px;
-            flex-wrap: wrap; /* Allows elements to wrap on smaller screens */
+            flex-wrap: wrap;
         }
         .result-box {
             background-color: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
-            width: 45%; /* Adjusted for space for IMC */
-            margin-bottom: 15px; /* Space between boxes on small screens */
+            width: 45%;
+            margin-bottom: 15px;
         }
         .result-box.imc {
-            width: 95%; /* IMC takes more space, centered */
+            width: 95%;
             margin-top: 10px;
-            background-color: #e6f7ff; /* Different color for IMC */
+            background-color: #e6f7ff;
             border: 1px solid #91d5ff;
         }
         .result-box h3 { margin-top: 0; color: #555; font-size: 1rem; }
@@ -66,6 +66,23 @@
             margin-top: 10px;
             color: #333;
         }
+
+        /* NOUVEAUX STYLES IMC */
+        .imc-normal .imc-category {
+            color: #28a745; /* Vert pour poids normal */
+        }
+        .imc-overweight .imc-category {
+            color: #ff9800; /* Orange pour surpoids */
+        }
+        .imc-obese .imc-category,
+        .imc-severely-obese .imc-category,
+        .imc-morbidly-obese .imc-category {
+            color: #dc3545; /* Rouge pour obésité */
+        }
+        .imc-underweight .imc-category {
+            color: #6c757d; /* Gris pour sous-poids */
+        }
+
 
         .program-cards {
             display: grid;
@@ -89,10 +106,10 @@
         }
         .card-image {
             width: 100%;
-            max-height: 180px; /* Set a maximum height */
+            max-height: 180px;
             border-radius: 8px 8px 0 0;
             margin-bottom: 15px;
-            object-fit: contain; /* Ensures the entire image is visible, may add some empty space */
+            object-fit: contain;
         }
         .card-content {
             flex-grow: 1;
@@ -111,7 +128,7 @@
         .card-price {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #28a745;
+            color: #000000; /* PRIX EN NOIR */
             margin-bottom: 15px;
         }
         .buy-button {
@@ -141,32 +158,31 @@
             border-radius: 5px;
             transform: rotate(30deg);
         }
-        /* Styles pour l'estimation de la perte de poids - CORRECTION DE L'AFFICHAGE */
+        /* Styles pour l'estimation de la perte de poids - MAINTENANT EN VERT */
         .estimated-loss {
             font-weight: 700;
             font-size: 1.1em;
-            color: #d9534f;
-            background-color: #ffe0e0;
+            color: #155724; /* Texte vert foncé */
+            background-color: #d4edda; /* Fond vert clair */
             padding: 8px 10px;
             border-radius: 5px;
             margin-top: 10px;
             margin-bottom: 15px;
             text-align: center;
-            border: 1px solid #d9534f;
+            border: 1px solid #28a745; /* Bordure verte */
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            /* AJUSTEMENTS CLÉS POUR L'AFFICHAGE */
-            line-height: 1.4; /* Assure que le texte ne se chevauche pas */
-            min-height: 50px; /* Donne une hauteur minimale pour le contenu, même avec plusieurs lignes */
-            display: flex; /* Utilise flexbox pour centrer le texte verticalement */
-            align-items: center; /* Centre le texte verticalement */
-            justify-content: center; /* Centre le texte horizontalement */
-            word-break: break-word; /* Empêche les mots longs de déborder */
+            line-height: 1.4;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-word;
         }
 
         /* Media Queries for responsiveness */
         @media (max-width: 600px) {
             .results-summary .result-box {
-                width: 100%; /* Boxes take full width on small screens */
+                width: 100%;
             }
         }
     </style>
@@ -187,7 +203,7 @@
                     <p class="result-value" id="tdee-result">0</p>
                     <p class="unit">Calories / jour</p>
                 </div>
-                <div class="result-box imc">
+                <div class="result-box imc" id="imc-box">
                     <h3>Votre Indice de Masse Corporelle (IMC)</h3>
                     <p class="result-value" id="imc-result">0.0</p>
                     <p class="unit">kg/m²</p>
@@ -200,41 +216,58 @@
         <div class="section" id="main-recommendation">
             <h2>Votre Programme Idéal Pour Démarrer</h2>
             <div id="recommended-program-container" class="program-cards">
-                </div>
+            </div>
         </div>
 
         <div class="section" id="complete-challenge">
              <h2>Notre Recommandation Phare : Le Défi Complet</h2>
             <div id="challenge-7-weeks-container" class="program-cards">
-                </div>
+            </div>
         </div>
 
 
         <div class="section" id="other-options">
             <h2>Toutes Nos Options Pour la Perte de Poids</h2>
             <div id="other-programs-container" class="program-cards">
-                </div>
+            </div>
         </div>
     </div>
 
     <script>
         // Base de données des programmes
         const programs = [
-            { id: 1, name: "10 jours pour sécher", price: "10,99€", calories: 1300, duration: "10 jours", description: "Idéal pour un démarrage rapide et une perte de poids visible en peu de temps.", link: "https://shop.beacons.ai/kcoaching/bfc42c3d-a1a0-42c9-82bc-395ddffcb3bc", imageUrl: "10 JOURS POUR SECHER.PNG" },
-            { id: 2, name: "14 jours pour sécher", price: "14,99€", calories: 1300, duration: "14 jours", description: "Prolongez l'effort pour des résultats plus consolidés avec ce plan efficace.", link: "https://shop.beacons.ai/kcoaching/cf28c7c7-cbad-44c6-b3cd-59419c8163d3", imageUrl: "14 JOURS POUR SECHER.PNG" },
-            { id: 3, name: "Défi 14 jours", price: "14,99€", calories: 1400, duration: "14 jours", description: "Un équilibre parfait entre un apport calorique modéré et une perte de poids efficace.", link: "https://shop.beacons.ai/kcoaching/5b5379d0-cd57-4068-87b3-8aa393fa4824", imageUrl: "DEFI 14 JOURS.PNG" },
-            { id: 4, name: "Challenge 4 semaines", price: "19,99€", calories: 1500, duration: "4 semaines", description: "Un plan sur un mois pour transformer votre silhouette de manière durable.", link: "https://shop.beacons.ai/kcoaching/8d04e33c-a3c9-4e77-8e1d-5d4faa4d15ce", imageUrl: "CHALLENGE 4 SEMAINES.PNG" },
-            { id: 5, name: "Challenge 7 semaines", price: "29,99€", calories: "Variable", duration: "7 semaines", description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.", link: "https://shop.beacons.ai/kcoaching/5fee0cd5-b961-4699-b2c7-f73591d9bfbb", imageUrl: "CHALLENGE 7 SEMAINES.PNG" }
+            { id: 1, name: "10 jours pour sécher", price: "10,99€", calories: 1300, duration: "10 jours", description: "Idéal pour un démarrage rapide et une perte de poids visible en peu de temps.", link: "https://shop.beacons.ai/kcoaching/bfc42c3d-a1a0-42c9-82bc-395ddffcb3bc", imageUrl: "Blanc et Noir Recettes Pinterest Vidéo Épingle.png 1.jpg" },
+            { id: 2, name: "14 jours pour sécher", price: "14,99€", calories: 1300, duration: "14 jours", description: "Prolongez l'effort pour des résultats plus consolidés avec ce plan efficace.", link: "https://shop.beacons.ai/kcoaching/cf28c7c7-cbad-44c6-b3cd-59419c8163d3", imageUrl: "Blanc et Noir Recettes Pinterest Vidéo Épingle.zip - 2.jpg" },
+            { id: 3, name: "Défi 14 jours", price: "14,99€", calories: 1400, duration: "14 jours", description: "Un équilibre parfait entre un apport calorique modéré et une perte de poids efficace.", link: "https://shop.beacons.ai/kcoaching/5b5379d0-cd57-4068-87b3-8aa393fa4824", imageUrl: "Blanc et Noir Recettes Pinterest Vidéo Épingle.zip - 3 1.jpg" },
+            { id: 4, name: "Challenge 4 semaines", price: "19,99€", calories: 1500, duration: "4 semaines", description: "Un plan sur un mois pour transformer votre silhouette de manière durable.", link: "https://shop.beacons.ai/kcoaching/8d04e33c-a3c9-4e77-8e1d-5d4faa4d15ce", imageUrl: "Blanc et Noir Recettes Pinterest Vidéo Épingle.zip - 4 1.jpg" },
+            { id: 5, name: "Challenge 7 semaines", price: "29,99€", calories: "Variable", duration: "7 semaines", description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.", link: "https://shop.beacons.ai/kcoaching/5fee0cd5-b961-4699-b2c7-f73591d9bfbb", imageUrl: "10 JOURS POUR SECHER.jpg" }
         ];
 
-        // Function to determine the IMC category
+        // Function to determine the IMC category and apply specific colors
         function getIMCCategory(imc) {
-            if (imc < 18.5) return "Insuffisance pondérale (maigreur)";
-            if (imc >= 18.5 && imc < 25) return "Poids normal";
-            if (imc >= 25 && imc < 30) return "Surpoids";
-            if (imc >= 30 && imc < 35) return "Obésité modérée";
-            if (imc >= 35 && imc < 40) return "Obésité sévère";
-            return "Obésité morbide ou massive";
+            const imcBox = document.getElementById('imc-box');
+            let categoryText = "";
+
+            if (imc < 18.5) {
+                categoryText = "Insuffisance pondérale (maigreur)";
+                imcBox.classList.add('imc-underweight');
+            } else if (imc >= 18.5 && imc < 25) {
+                categoryText = "Poids normal";
+                imcBox.classList.add('imc-normal');
+            } else if (imc >= 25 && imc < 30) {
+                categoryText = "Surpoids";
+                imcBox.classList.add('imc-overweight');
+            } else if (imc >= 30 && imc < 35) {
+                categoryText = "Obésité modérée";
+                imcBox.classList.add('imc-obese');
+            } else if (imc >= 35 && imc < 40) {
+                categoryText = "Obésité sévère";
+                imcBox.classList.add('imc-severely-obese');
+            } else {
+                categoryText = "Obésité morbide ou massive";
+                imcBox.classList.add('imc-morbidly-obese');
+            }
+            return categoryText;
         }
 
         // Function to calculate estimated weight loss
@@ -251,15 +284,14 @@
 
             const dailyDeficit = tdee - dailyCaloricIntake;
 
-            if (dailyDeficit <= 0) {
-                return "Pas de perte estimée (pas de déficit calorique suffisant)";
+            if (dailyDeficit <= 50) { // Slightly increased threshold for "no estimated loss"
+                return "Pas de perte significative estimée (déficit calorique insuffisant)";
             }
 
             const totalDeficit = dailyDeficit * DAYS_IN_3_MONTHS;
             const estimatedLossKg = totalDeficit / CALORIES_PER_KG_FAT;
 
-            // Ajoutez un contrôle pour des résultats déraisonnables ou très faibles
-            if (estimatedLossKg < 0.1) { // Si la perte estimée est inférieure à 100g
+            if (estimatedLossKg < 0.5) { // If estimated loss is less than 500g
                 return "Perte minimale estimée";
             }
 
@@ -281,7 +313,8 @@
                         <p>${program.description}</p>
                     </div>
                     <div class="card-price">${program.price}</div>
-                    <p class="estimated-loss" id="estimated-loss-${program.id}"></p> <a href="${program.link}" class="buy-button">Choisir ce programme</a>
+                    <p class="estimated-loss" id="estimated-loss-${program.id}"></p>
+                    <a href="${program.link}" class="buy-button">Choisir ce programme</a>
                 </div>
             `;
         }
@@ -305,12 +338,12 @@
             const heightInMeters = height / 100;
             const imc = weight / (heightInMeters * heightInMeters);
             document.getElementById('imc-result').textContent = imc.toFixed(1);
-            document.getElementById('imc-category').textContent = getIMCCategory(imc);
+            document.getElementById('imc-category').textContent = getIMCCategory(imc); // Appelle la fonction pour définir la catégorie et la couleur
 
             // Logic for main program recommendation
             const recommendedContainer = document.getElementById('recommended-program-container');
-            let recommendedProgramHTML = ''; // Use a temporary variable to build the HTML for this section
-            let recommendedIdsForFiltering = []; // Keep track of IDs displayed here to filter 'other programs'
+            let recommendedProgramHTML = '';
+            let recommendedIdsForFiltering = [];
 
             if (tdee >= 1600 && tdee < 1800) {
                 const program1 = programs.find(p => p.id === 1);
@@ -343,7 +376,6 @@
 
             // Display other programs (those not already recommended and not the 7-week challenge)
             const otherContainer = document.getElementById('other-programs-container');
-            // Filter programs to exclude those already displayed in main recommendation and the 7-week challenge
             otherContainer.innerHTML = programs.filter(p => !recommendedIdsForFiltering.includes(p.id)).map(p => createProgramCard(p)).join('');
 
             // Calculate and display weight loss for ALL programs immediately
