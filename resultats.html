@@ -141,19 +141,26 @@
             border-radius: 5px;
             transform: rotate(30deg);
         }
-        /* Styles pour l'estimation de la perte de poids - MISE EN ÉVIDENCE */
+        /* Styles pour l'estimation de la perte de poids - CORRECTION DE L'AFFICHAGE */
         .estimated-loss {
-            font-weight: 700; /* Plus gras */
-            font-size: 1.1em; /* Un peu plus grand */
-            color: #d9534f; /* Rouge pour attirer l'attention (peut être changé) */
-            background-color: #ffe0e0; /* Fond légèrement coloré */
-            padding: 8px 10px; /* Espacement interne */
-            border-radius: 5px; /* Coins arrondis */
+            font-weight: 700;
+            font-size: 1.1em;
+            color: #d9534f;
+            background-color: #ffe0e0;
+            padding: 8px 10px;
+            border-radius: 5px;
             margin-top: 10px;
             margin-bottom: 15px;
             text-align: center;
-            border: 1px solid #d9534f; /* Bordure pour plus de visibilité */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Légère ombre */
+            border: 1px solid #d9534f;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            /* AJUSTEMENTS CLÉS POUR L'AFFICHAGE */
+            line-height: 1.4; /* Assure que le texte ne se chevauche pas */
+            min-height: 50px; /* Donne une hauteur minimale pour le contenu, même avec plusieurs lignes */
+            display: flex; /* Utilise flexbox pour centrer le texte verticalement */
+            align-items: center; /* Centre le texte verticalement */
+            justify-content: center; /* Centre le texte horizontalement */
+            word-break: break-word; /* Empêche les mots longs de déborder */
         }
 
         /* Media Queries for responsiveness */
@@ -251,6 +258,11 @@
             const totalDeficit = dailyDeficit * DAYS_IN_3_MONTHS;
             const estimatedLossKg = totalDeficit / CALORIES_PER_KG_FAT;
 
+            // Ajoutez un contrôle pour des résultats déraisonnables ou très faibles
+            if (estimatedLossKg < 0.1) { // Si la perte estimée est inférieure à 100g
+                return "Perte minimale estimée";
+            }
+
             return `~${estimatedLossKg.toFixed(1)} kg`; // Display 1 decimal place
         }
 
@@ -297,19 +309,20 @@
 
             // Logic for main program recommendation
             const recommendedContainer = document.getElementById('recommended-program-container');
-            let recommendedProgramHTML = ''; // Utilisez une variable temporaire pour construire le HTML
+            let recommendedProgramHTML = ''; // Use a temporary variable to build the HTML for this section
+            let recommendedIdsForFiltering = []; // Keep track of IDs displayed here to filter 'other programs'
 
             if (tdee >= 1600 && tdee < 1800) {
                 const program1 = programs.find(p => p.id === 1);
                 const program2 = programs.find(p => p.id === 2);
-                if (program1) recommendedProgramHTML += createProgramCard(program1, true);
-                if (program2) recommendedProgramHTML += createProgramCard(program2, true);
+                if (program1) { recommendedProgramHTML += createProgramCard(program1, true); recommendedIdsForFiltering.push(program1.id); }
+                if (program2) { recommendedProgramHTML += createProgramCard(program2, true); recommendedIdsForFiltering.push(program2.id); }
             } else if (tdee >= 1800 && tdee < 2000) {
                 const program3 = programs.find(p => p.id === 3);
-                if (program3) recommendedProgramHTML += createProgramCard(program3, true);
+                if (program3) { recommendedProgramHTML += createProgramCard(program3, true); recommendedIdsForFiltering.push(program3.id); }
             } else if (tdee >= 2000) {
                 const program4 = programs.find(p => p.id === 4);
-                if (program4) recommendedProgramHTML += createProgramCard(program4, true);
+                if (program4) { recommendedProgramHTML += createProgramCard(program4, true); recommendedIdsForFiltering.push(program4.id); }
             } else { // TDEE < 1600
                 const program1 = programs.find(p => p.id === 1);
                 if (program1) {
@@ -317,6 +330,7 @@
                         ${createProgramCard(program1, true)}
                         <p style="text-align:center; margin-top:15px; grid-column: 1 / -1;">Avec votre métabolisme, un programme très bas en calories est nécessaire pour une perte de poids efficace.</p>
                     `;
+                    recommendedIdsForFiltering.push(program1.id);
                 }
             }
             recommendedContainer.innerHTML = recommendedProgramHTML;
@@ -325,11 +339,12 @@
             // Always display the 7-week challenge as a featured recommendation
             const challenge7Weeks = programs.find(p => p.id === 5);
             document.getElementById('challenge-7-weeks-container').innerHTML = createProgramCard(challenge7Weeks, true);
+            recommendedIdsForFiltering.push(challenge7Weeks.id); // Add 7-week challenge to filtered IDs
 
             // Display other programs (those not already recommended and not the 7-week challenge)
             const otherContainer = document.getElementById('other-programs-container');
-            const allRecommendedAndChallengeIds = (recommendedProgramHTML !== '' ? recommendedIds : []).concat([5]); // Fix for getting all IDs
-            otherContainer.innerHTML = programs.filter(p => !allRecommendedAndChallengeIds.includes(p.id)).map(p => createProgramCard(p)).join('');
+            // Filter programs to exclude those already displayed in main recommendation and the 7-week challenge
+            otherContainer.innerHTML = programs.filter(p => !recommendedIdsForFiltering.includes(p.id)).map(p => createProgramCard(p)).join('');
 
             // Calculate and display weight loss for ALL programs immediately
             if (!isNaN(tdee)) {
