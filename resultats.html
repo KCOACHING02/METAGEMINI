@@ -28,8 +28,9 @@
         }
 
         body {
-            font-family: var(--font-primary); /* Utilisation de la nouvelle police */
-            background-color: var(--bg-light);
+            font-family: var(--font-primary);
+            /* Nouveau : Dégradé de fond subtil pour cohérence avec index.html */
+            background: linear-gradient(135deg, var(--bg-light) 0%, #e8f0ef 100%);
             color: var(--text-medium);
             line-height: 1.6;
             margin: 0;
@@ -65,9 +66,36 @@
             color: var(--text-dark);
         }
         h1 { font-size: 2.2rem; color: var(--primary-blue); margin-bottom: 15px;}
-        h2 { text-align: center; font-size: 1.8rem; margin-bottom: 30px; }
+        h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            padding-bottom: 15px; /* Nouveau : padding pour la ligne */
+            border-bottom: 2px solid var(--primary-blue); /* Nouveau : ligne de séparation */
+            position: relative;
+        }
+        /* Nouveau : petit pseudo-élément pour la ligne sous les h2, pour un effet plus doux */
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -2px; /* Sous la bordure */
+            transform: translateX(-50%);
+            width: 50px; /* Longueur de la ligne courte */
+            height: 4px; /* Épaisseur de la ligne */
+            background-color: var(--secondary-orange); /* Couleur d'accentuation */
+            border-radius: 2px;
+        }
         h3 { color: var(--primary-blue); } /* Couleur bleue pour les h3 dans les sections ou cartes */
-        .result-box h3 { color: var(--text-medium); font-size: 1rem; } /* Override for result boxes */
+        .result-box h3 {
+            color: var(--text-dark); /* Couleur plus foncée pour les titres de boîte de résultat */
+            font-size: 1.1rem; /* Légèrement plus grand */
+            display: flex; /* Pour aligner icône et texte */
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Espace entre icône et texte */
+            margin-bottom: 10px; /* Nouveau : espace en dessous du titre */
+        }
 
 
         .results-summary {
@@ -76,18 +104,24 @@
             text-align: center;
             margin-bottom: 30px;
             flex-wrap: wrap;
-            gap: 20px; /* Ajout d'un espace entre les boîtes */
+            gap: 20px;
         }
         .result-box {
-            background-color: #f8f9fa;
+            background-color: var(--bg-white); /* Fond blanc pour les cartes */
             padding: 20px;
-            border-radius: 8px;
-            width: calc(50% - 10px); /* Adjust width for gap */
+            border-radius: 10px; /* Bordure légèrement arrondie */
+            width: calc(33.33% - 20px); /* Ajuster la largeur pour 3 colonnes et le gap */
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            border: 1px solid var(--border-light); /* Nouvelle : bordure légère */
+            box-shadow: 0 4px 15px var(--shadow-light); /* Nouvelle : ombre pour un effet carte */
+            transition: transform 0.2s ease-in-out; /* Pour un petit effet au survol */
+        }
+        .result-box:hover {
+            transform: translateY(-5px); /* Léger soulèvement au survol */
         }
         .result-box.imc {
             width: 100%; /* IMC prend la largeur totale */
@@ -264,9 +298,17 @@
         }
 
         /* Media Queries for responsiveness */
+        @media (max-width: 768px) {
+            .results-summary .result-box {
+                width: calc(50% - 15px); /* 2 colonnes sur les petits écrans */
+            }
+            .result-box.imc {
+                width: 100%; /* IMC reste en pleine largeur */
+            }
+        }
         @media (max-width: 600px) {
             .results-summary .result-box {
-                width: 100%;
+                width: 100%; /* 1 colonne sur très petits écrans */
             }
             .section {
                 padding: 20px;
@@ -276,6 +318,9 @@
             }
             .guarantee-logos img {
                 height: 30px;
+            }
+            h2 {
+                font-size: 1.6rem;
             }
         }
     </style>
@@ -287,17 +332,17 @@
             <h1>Vos Résultats Personnalisés</h1>
             <div class="results-summary">
                 <div class="result-box">
-                    <h3>Métabolisme de Base</h3>
+                    <h3><i class="fas fa-fire"></i> Métabolisme de Base</h3>
                     <p class="result-value" id="bmr-result">0</p>
                     <p class="unit">Calories / jour</p>
                 </div>
                 <div class="result-box">
-                    <h3>Maintien du Poids</h3>
+                    <h3><i class="fas fa-balance-scale"></i> Maintien du Poids</h3>
                     <p class="result-value" id="tdee-result">0</p>
                     <p class="unit">Calories / jour</p>
                 </div>
                 <div class="result-box imc" id="imc-box">
-                    <h3>Votre Indice de Masse Corporelle (IMC)</h3>
+                    <h3><i class="fas fa-chart-line"></i> Votre Indice de Masse Corporelle (IMC)</h3>
                     <p class="result-value" id="imc-result">0.0</p>
                     <p class="unit">kg/m²</p>
                     <p class="imc-category" id="imc-category"></p>
