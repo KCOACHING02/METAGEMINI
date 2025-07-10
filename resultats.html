@@ -141,36 +141,20 @@
             border-radius: 5px;
             transform: rotate(30deg);
         }
+        /* Styles pour l'estimation de la perte de poids - MISE EN ÉVIDENCE */
         .estimated-loss {
-            font-weight: 600;
-            color: #007bff; /* Blue color for the loss estimation */
-            margin-top: 5px;
-            margin-bottom: 15px; /* Added space below loss estimation */
-            min-height: 1.2em; /* Ensures consistent spacing even if no text */
-            text-align: center; /* Center the text */
+            font-weight: 700; /* Plus gras */
+            font-size: 1.1em; /* Un peu plus grand */
+            color: #d9534f; /* Rouge pour attirer l'attention (peut être changé) */
+            background-color: #ffe0e0; /* Fond légèrement coloré */
+            padding: 8px 10px; /* Espacement interne */
+            border-radius: 5px; /* Coins arrondis */
+            margin-top: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 1px solid #d9534f; /* Bordure pour plus de visibilité */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Légère ombre */
         }
-        /* Style for the estimation button */
-        .estimation-button {
-            background-color: #007bff; /* Blue */
-            color: white;
-            padding: 15px 25px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 20px; /* Space above button */
-            width: 100%;
-            max-width: 400px; /* Max width for button */
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .estimation-button:hover {
-            background-color: #0056b3; /* Darker blue on hover */
-        }
-
 
         /* Media Queries for responsiveness */
         @media (max-width: 600px) {
@@ -205,9 +189,7 @@
             </div>
             <p>Ce besoin journalier est la base pour définir votre stratégie. Pour perdre du poids, vous devez consommer moins de calories que ce montant.</p>
 
-            <button id="calculate-loss-button" class="estimation-button">Estimer ma perte de poids sur 3 mois</button>
-
-        </div>
+            </div>
 
         <div class="section" id="main-recommendation">
             <h2>Votre Programme Idéal Pour Démarrer</h2>
@@ -257,8 +239,6 @@
             let dailyCaloricIntake;
             if (programCalories === "Variable") {
                 // Assumption for "Challenge 7 semaines" with variable calories
-                // This is an assumed effective average intake for calculation purposes
-                // This value should aim to create a good deficit for weight loss.
                 dailyCaloricIntake = 1350; // Using a conservative but effective average
             } else {
                 dailyCaloricIntake = programCalories;
@@ -307,7 +287,6 @@
 
             // Basic validation and redirection if essential data is missing
             if (isNaN(tdee) || isNaN(weight) || isNaN(height)) {
-                // Redirect if TDEE, weight, or height are invalid or missing
                 window.location.href = 'index.html';
                 return;
             }
@@ -355,15 +334,10 @@
             const otherContainer = document.getElementById('other-programs-container');
             otherContainer.innerHTML = programs.filter(p => !recommendedIds.includes(p.id) && p.id !== 5).map(p => createProgramCard(p)).join('');
 
-            // Add event listener for the new weight loss estimation button
-            document.getElementById('calculate-loss-button').addEventListener('click', function() {
-                // TDEE is already parsed at the beginning of the 'load' event
-                if (isNaN(tdee)) {
-                    alert("Impossible de calculer l'estimation sans votre TDEE. Veuillez recommencer depuis la page précédente.");
-                    return;
-                }
-
-                // Iterate through all programs to calculate and display the estimated loss
+            // --- NOUVEAU : Calcul et affichage direct de la perte de poids au chargement ---
+            // Le bouton a été retiré, donc plus besoin d'addEventListener sur un bouton.
+            // Le calcul se fait pour tous les programmes dès que la page est prête.
+            if (!isNaN(tdee)) { // S'assurer que le TDEE est valide avant de calculer
                 programs.forEach(program => {
                     const estimatedLossText = calculateEstimatedLoss(tdee, program.calories);
                     const lossElement = document.getElementById(`estimated-loss-${program.id}`);
@@ -371,7 +345,7 @@
                         lossElement.textContent = `Perte estimée sur 3 mois : ${estimatedLossText}`;
                     }
                 });
-            });
+            }
         });
     </script>
 
