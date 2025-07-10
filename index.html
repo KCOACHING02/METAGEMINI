@@ -157,8 +157,8 @@
 
             const tdee = bmr * activityFactor;
 
-            // Rediriger vers la page de résultats avec les données en paramètres
-            window.location.href = `resultats.html?bmr=${bmr.toFixed(0)}&tdee=${tdee.toFixed(0)}`;
+            // Rediriger vers la page de résultats avec les données en paramètres, y compris le poids et la taille
+            window.location.href = `resultats.html?bmr=${bmr.toFixed(0)}&tdee=${tdee.toFixed(0)}&weight=${weight}&height=${height}`;
         });
     </script>
 
