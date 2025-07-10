@@ -311,7 +311,6 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Visa_Inc._logo.svg/1200px-Visa_Inc._logo.svg.png" alt="Visa Logo">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard Logo">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/2560px-PayPal.svg.png" alt="PayPal Logo">
-            <p style="margin-top: 15px;">🔒 Garantie satisfait ou remboursé sous 14 jours !</p>
         </div>
 
         <a href="index.html" class="button-back">Recommencer un calcul</a>
@@ -375,7 +374,7 @@
                 return "Pas de perte significative estimée (déficit calorique insuffisant)";
             }
 
-            const totalDeficit = dailyDeficit * DAYS_IN_3_MONTHS;
+            const totalDeficit = dailyCaloricIntake > 0 ? dailyDeficit * DAYS_IN_3_MONTHS : 0; // Ensure positive intake
             const estimatedLossKg = totalDeficit / CALORIES_PER_KG_FAT;
 
             if (estimatedLossKg < 0.5) { // If estimated loss is less than 500g
