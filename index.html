@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Métabolisme et Besoins Énergétiques</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .gender-group {
+            display: flex;
+            gap: 15px;
+        }
+        .gender-group div {
+            flex: 1;
+        }
+        input[type="radio"] {
+            display: none;
+        }
+        .gender-label {
+            display: block;
+            background-color: #eee;
+            color: #777;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        input[type="radio"]:checked + .gender-label {
+            background-color: #007bff;
+            color: white;
+            font-weight: 700;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Calculez Votre Métabolisme ⚡</h1>
+        <form id="metabolism-form">
+            <div class="form-group">
+                <label>Sexe</label>
+                <div class="gender-group">
+                    <div>
+                        <input type="radio" id="homme" name="gender" value="male" checked>
+                        <label for="homme" class="gender-label">Homme</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="femme" name="gender" value="female">
+                        <label for="femme" class="gender-label">Femme</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="age">Âge (années)</label>
+                <input type="number" id="age" required>
+            </div>
+            <div class="form-group">
+                <label for="weight">Poids (kg)</label>
+                <input type="number" id="weight" required>
+            </div>
+            <div class="form-group">
+                <label for="height">Taille (cm)</label>
+                <input type="number" id="height" required>
+            </div>
+            <div class="form-group">
+                <label for="activity">Niveau d'activité physique</label>
+                <select id="activity">
+                    <option value="1.2">Sédentaire (peu ou pas d'exercice)</option>
+                    <option value="1.375">Légèrement actif (exercice 1-3 jours/semaine)</option>
+                    <option value="1.55">Modérément actif (exercice 3-5 jours/semaine)</option>
+                    <option value="1.725">Très actif (exercice 6-7 jours/semaine)</option>
+                    <option value="1.9">Extrêmement actif (travail physique et exercice intense)</option>
+                </select>
+            </div>
+            <button type="submit">Calculer mes besoins</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('metabolism-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const age = parseInt(document.getElementById('age').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const activityFactor = parseFloat(document.getElementById('activity').value);
+
+            if (isNaN(age) || isNaN(weight) || isNaN(height)) {
+                alert("Veuillez remplir tous les champs correctement.");
+                return;
+            }
+
+            let bmr;
+            if (gender === 'male') {
+                bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+            } else {
+                bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+            }
+
+            const tdee = bmr * activityFactor;
+
+            // Rediriger vers la page de résultats avec les données en paramètres
+            window.location.href = `resultats.html?bmr=${bmr.toFixed(0)}&tdee=${tdee.toFixed(0)}`;
+        });
+    </script>
+
+</body>
+</html>
