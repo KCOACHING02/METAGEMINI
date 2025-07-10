@@ -67,6 +67,7 @@
             padding: 25px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
         }
         .card:hover {
             transform: translateY(-8px);
@@ -107,10 +108,23 @@
         .buy-button:hover {
             background-color: #e66a3d;
         }
+        .recommended-badge {
+            position: absolute;
+            top: 15px;
+            right: -10px;
+            background-color: #007bff;
+            color: white;
+            padding: 5px 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 5px;
+            transform: rotate(30deg);
+        }
         #no-loss-goal {
             background-color: #fffbe6;
             border: 1px solid #ffe58f;
         }
+
     </style>
 </head>
 <body>
@@ -130,22 +144,23 @@
                     <p class="unit">Calories / jour</p>
                 </div>
             </div>
-            <p>Ce besoin journalier est la base pour définir votre stratégie. Pour perdre du poids, vous devez consommer moins que ce montant.</p>
+            <p>Ce besoin journalier est la base pour définir votre stratégie. Pour perdre du poids, vous devez consommer moins de calories que ce montant.</p>
         </div>
 
-        <div class="section" id="main-recommendation-section">
+        <div class="section" id="main-recommendation">
             <h2>Votre Programme Idéal Pour Démarrer</h2>
             <div id="recommended-program-container" class="program-cards">
                 </div>
         </div>
 
-        <div class="section" id="complete-challenge-section">
+        <div class="section" id="complete-challenge">
              <h2>Notre Recommandation Phare : Le Défi Complet</h2>
             <div id="challenge-7-weeks-container" class="program-cards">
                 </div>
         </div>
 
-        <div class="section" id="other-options-section">
+
+        <div class="section" id="other-options">
             <h2>Toutes Nos Options Pour la Perte de Poids</h2>
             <div id="other-programs-container" class="program-cards">
                 </div>
@@ -153,13 +168,13 @@
 
         <div class="section" id="no-loss-goal">
             <h2>Un autre objectif en tête ?</h2>
-            <p>Nos programmes sont optimisés pour la <strong>perte de poids</strong>. Si votre objectif est de <strong>maintenir votre poids</strong> ou de faire une <strong>prise de masse</strong>, nous vous recommandons de viser respectivement <strong id="maintenance-goal">0</strong> ou <strong id="gain-goal">0</strong> calories.</p>
+            <p>Nos programmes actuels sont optimisés pour la <strong>perte de poids (sèche)</strong>. Si votre objectif est de <strong>maintenir votre poids</strong> ou de faire une <strong>prise de masse</strong>, nous vous recommandons de consommer respectivement <strong id="maintenance-goal">0</strong> ou <strong id="gain-goal">0</strong> calories.</p>
             <p>Contactez-nous pour un plan personnalisé ou restez à l'écoute pour nos futurs programmes !</p>
         </div>
     </div>
 
     <script>
-        // --- BASE DE DONNÉES DES PROGRAMMES ---
+        // Base de données des programmes
         const programs = [
             { id: 1, name: "10 jours pour sécher", price: "10,99€", calories: 1300, duration: "10 jours", description: "Idéal pour un démarrage rapide et une perte de poids visible en peu de temps.", link: "#LIEN_PRODUIT_1" },
             { id: 2, name: "14 jours pour sécher", price: "14,99€", calories: 1300, duration: "14 jours", description: "Prolongez l'effort pour des résultats plus consolidés avec ce plan efficace.", link: "#LIEN_PRODUIT_2" },
@@ -168,10 +183,11 @@
             { id: 5, name: "Challenge 7 semaines", price: "29,99€", calories: "Variable", duration: "7 semaines", description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.", link: "#LIEN_PRODUIT_5" }
         ];
 
-        // --- FONCTION POUR CRÉER UNE CARTE HTML ---
-        function createProgramCard(program) {
+        // Fonction pour créer une carte de programme HTML
+        function createProgramCard(program, isRecommended = false) {
             return `
                 <div class="card">
+                    ${isRecommended ? '<div class="recommended-badge">Recommandé</div>' : ''}
                     <div class="card-content">
                         <h3 class="card-title">${program.name}</h3>
                         <p class="card-details">
@@ -185,74 +201,57 @@
                 </div>
             `;
         }
-        
-        // --- LOGIQUE PRINCIPALE AU CHARGEMENT DE LA PAGE ---
+
         window.addEventListener('load', function() {
             const params = new URLSearchParams(window.location.search);
             const bmr = parseInt(params.get('bmr'));
             const tdee = parseInt(params.get('tdee'));
 
-            // Sécurité : si les données sont absentes, on retourne à l'accueil.
             if (isNaN(tdee)) {
                 window.location.href = 'index.html';
                 return;
             }
 
-            // 1. Afficher les résultats BMR et TDEE
+            // Afficher les résultats BMR et TDEE
             document.getElementById('bmr-result').textContent = bmr;
             document.getElementById('tdee-result').textContent = tdee;
 
-            // 2. Déterminer les programmes à recommander
-            let recommendedIds = [];
-            if (tdee >= 1600 && tdee < 1800) {
-                recommendedIds = [1, 2]; // Programmes à 1300 kcal
-            } else if (tdee >= 1800 && tdee < 2000) {
-                recommendedIds = [3];    // Programme à 1400 kcal
-            } else if (tdee >= 2000) {
-                recommendedIds = [4];    // Programme à 1500 kcal
-            } else { // tdee < 1600
-                recommendedIds = [1];    // On recommande le plus court pour commencer
-            }
-            
-            // 3. Afficher les différentes sections de programmes
+            // Logique de recommandation
             const recommendedContainer = document.getElementById('recommended-program-container');
-            const challengeContainer = document.getElementById('challenge-7-weeks-container');
-            const otherContainer = document.getElementById('other-programs-container');
+            let recommendedIds = [];
 
-            // Vider les conteneurs pour éviter les duplications si le code est exécuté plusieurs fois
-            recommendedContainer.innerHTML = '';
-            challengeContainer.innerHTML = '';
-            otherContainer.innerHTML = '';
-
-            // Construire les listes de programmes
-            const recommendedPrograms = programs.filter(p => recommendedIds.includes(p.id));
-            const challengeProgram = programs.find(p => p.id === 5);
-            const otherPrograms = programs.filter(p => !recommendedIds.includes(p.id) && p.id !== 5);
-
-            // Afficher les programmes recommandés
-            if (recommendedPrograms.length > 0) {
-                recommendedPrograms.forEach(program => {
-                    recommendedContainer.innerHTML += createProgramCard(program);
-                });
+            if (tdee >= 1600 && tdee < 1800) {
+                // Pour un TDEE modéré, le programme à 1300kcal est idéal (déficit de 300-500)
+                recommendedIds.push(1, 2); // 10 et 14 jours à 1300
+                recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
+            } else if (tdee >= 1800 && tdee < 2000) {
+                // Pour un TDEE un peu plus élevé, 1400kcal est parfait
+                recommendedIds.push(3); // Défi 14 jours à 1400
+                recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
+            } else if (tdee >= 2000) {
+                // Pour un TDEE élevé, 1500kcal crée un déficit significatif et efficace
+                recommendedIds.push(4); // Challenge 4 semaines à 1500
+                recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
             } else {
-                 document.getElementById('main-recommendation-section').style.display = 'none';
+                // Pour les TDEE plus bas (<1600), le programme le moins calorique est le seul choix pour sécher
+                recommendedIds.push(1); // 10 jours pour sécher
+                document.getElementById('main-recommendation').innerHTML = `
+                    <h2>Pour un Départ Rapide</h2>
+                    <p class="program-cards">${createProgramCard(programs.find(p => p.id === 1), true)}</p>
+                    <p style="text-align:center; margin-top:15px;">Avec votre métabolisme, un programme très bas en calories est nécessaire pour une perte de poids efficace.</p>
+                `;
             }
-            
+
             // Toujours afficher le challenge de 7 semaines
-            challengeContainer.innerHTML = createProgramCard(challengeProgram);
-
-            // Afficher les autres programmes
-            if (otherPrograms.length > 0) {
-                otherPrograms.forEach(program => {
-                    otherContainer.innerHTML += createProgramCard(program);
-                });
-            } else {
-                // S'il n'y a pas d'autres programmes, on cache la section
-                document.getElementById('other-options-section').style.display = 'none';
-            }
+            const challenge7Weeks = programs.find(p => p.id === 5);
+            document.getElementById('challenge-7-weeks-container').innerHTML = createProgramCard(challenge7Weeks, true);
 
 
-            // 4. Mettre à jour la section "Autre objectif"
+            // Afficher les autres programmes (ceux qui n'ont pas été recommandés + le challenge de 7 semaines)
+            const otherContainer = document.getElementById('other-programs-container');
+            otherContainer.innerHTML = programs.filter(p => !recommendedIds.includes(p.id) && p.id !== 5).map(p => createProgramCard(p)).join('');
+
+            // Mettre à jour la section "Autre objectif"
             document.getElementById('maintenance-goal').textContent = `${tdee} kcal`;
             document.getElementById('gain-goal').textContent = `${tdee + 300} kcal`;
         });
