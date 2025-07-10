@@ -5,37 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vos Résultats et Programmes Recommandés</title>
     <style>
+        :root {
+            --primary-blue: #007bff;
+            --primary-green: #28a745;
+            --secondary-orange: #ff7f50;
+            --text-dark: #2c3e50;
+            --text-medium: #555;
+            --text-light: #777;
+            --bg-light: #f4f7f6;
+            --bg-white: #ffffff;
+            --border-light: #eee;
+            --shadow-light: rgba(0,0,0,0.08);
+            --shadow-medium: rgba(0,0,0,0.12);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+            background-color: var(--bg-light);
+            color: var(--text-medium);
             line-height: 1.6;
             margin: 0;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Alignement en haut pour les contenus longs */
+            min-height: 100vh;
         }
         .container {
             max-width: 800px;
             margin: 20px auto;
+            width: 100%;
         }
         .section {
-            background-color: #ffffff;
+            background-color: var(--bg-white);
             padding: 30px 40px;
             border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 30px var(--shadow-light);
             margin-bottom: 25px;
+            box-sizing: border-box; /* Important for consistent padding */
         }
         .header {
             text-align: center;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-light);
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
         h1, h2, h3 {
-            color: #2c3e50;
+            color: var(--text-dark);
         }
-        h1 { font-size: 2.2rem; color: #007bff; }
+        h1 { font-size: 2.2rem; color: var(--primary-blue); margin-bottom: 15px;}
         h2 { text-align: center; font-size: 1.8rem; margin-bottom: 30px; }
-        h3 { color: #007bff; }
+        h3 { color: var(--primary-blue); }
 
         .results-summary {
             display: flex;
@@ -43,45 +63,42 @@
             text-align: center;
             margin-bottom: 30px;
             flex-wrap: wrap;
+            gap: 20px; /* Ajout d'un espace entre les boîtes */
         }
         .result-box {
             background-color: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
-            width: 45%;
-            margin-bottom: 15px;
+            width: calc(50% - 10px); /* Adjust width for gap */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         .result-box.imc {
-            width: 95%;
+            width: 100%; /* IMC prend la largeur totale */
             margin-top: 10px;
             background-color: #e6f7ff;
             border: 1px solid #91d5ff;
         }
-        .result-box h3 { margin-top: 0; color: #555; font-size: 1rem; }
-        .result-value { font-size: 2.8em; font-weight: 700; color: #2c3e50; }
-        .unit { font-size: 1rem; color: #777; }
+        .result-box h3 { margin-top: 0; color: var(--text-medium); font-size: 1rem; }
+        .result-value { font-size: 2.8em; font-weight: 700; color: var(--text-dark); }
+        .unit { font-size: 1rem; color: var(--text-light); }
         .imc-category {
             font-size: 1.1rem;
             font-weight: 600;
             margin-top: 10px;
-            color: #333;
+            color: var(--text-medium);
         }
 
-        /* NOUVEAUX STYLES IMC */
-        .imc-normal .imc-category {
-            color: #28a745; /* Vert pour poids normal */
-        }
-        .imc-overweight .imc-category {
-            color: #ff9800; /* Orange pour surpoids */
-        }
+        /* Styles spécifiques pour l'IMC */
+        .imc-normal .imc-category { color: var(--primary-green); } /* Vert pour poids normal */
+        .imc-overweight .imc-category { color: #ff9800; } /* Orange pour surpoids */
         .imc-obese .imc-category,
         .imc-severely-obese .imc-category,
-        .imc-morbidly-obese .imc-category {
-            color: #dc3545; /* Rouge pour obésité */
-        }
-        .imc-underweight .imc-category {
-            color: #6c757d; /* Gris pour sous-poids */
-        }
+        .imc-morbidly-obese .imc-category { color: #dc3545; } /* Rouge pour obésité */
+        .imc-underweight .imc-category { color: #6c757d; } /* Gris pour sous-poids */
 
 
         .program-cards {
@@ -90,19 +107,19 @@
             gap: 25px;
         }
         .card {
-            background-color: #fff;
+            background-color: var(--bg-white);
             border: 1px solid #ddd;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; /* Smooth transition */
             position: relative;
         }
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            transform: translateY(-8px) scale(1.02); /* Slight lift and scale */
+            box-shadow: 0 10px 30px var(--shadow-medium);
         }
         .card-image {
             width: 100%;
@@ -110,6 +127,7 @@
             border-radius: 8px 8px 0 0;
             margin-bottom: 15px;
             object-fit: contain;
+            display: block; /* Ensures no extra space below image */
         }
         .card-content {
             flex-grow: 1;
@@ -122,7 +140,7 @@
         }
         .card-details {
             font-size: 0.95rem;
-            color: #555;
+            color: var(--text-medium);
             margin-bottom: 15px;
         }
         .card-price {
@@ -133,7 +151,7 @@
         }
         .buy-button {
             display: block;
-            background-color: #ff7f50;
+            background-color: var(--secondary-orange);
             color: white !important;
             padding: 12px 20px;
             text-align: center;
@@ -141,16 +159,16 @@
             border-radius: 8px;
             font-weight: 700;
             margin-top: auto;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease-in-out;
         }
         .buy-button:hover {
-            background-color: #e66a3d;
+            background-color: #e66a3d; /* Darker orange */
         }
         .recommended-badge {
             position: absolute;
             top: 15px;
             right: -10px;
-            background-color: #007bff;
+            background-color: var(--primary-blue);
             color: white;
             padding: 5px 15px;
             font-size: 0.8rem;
@@ -158,7 +176,7 @@
             border-radius: 5px;
             transform: rotate(30deg);
         }
-        /* Styles pour l'estimation de la perte de poids - MAINTENANT EN VERT */
+        /* Styles pour l'estimation de la perte de poids - EN VERT */
         .estimated-loss {
             font-weight: 700;
             font-size: 1.1em;
@@ -169,7 +187,7 @@
             margin-top: 10px;
             margin-bottom: 15px;
             text-align: center;
-            border: 1px solid #28a745; /* Bordure verte */
+            border: 1px solid var(--primary-green); /* Bordure verte */
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             line-height: 1.4;
             min-height: 50px;
@@ -179,10 +197,64 @@
             word-break: break-word;
         }
 
+        .info-message {
+            background-color: #e7f3fe;
+            color: #31708f;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #bce8f1;
+            margin-top: 20px;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            text-align: center;
+        }
+
+        .guarantee-logos {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-light);
+        }
+        .guarantee-logos p {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+        .guarantee-logos img {
+            height: 40px; /* Adjust size as needed */
+            margin: 0 10px;
+            vertical-align: middle;
+        }
+        .button-back {
+            display: block;
+            width: fit-content;
+            margin: 30px auto 0;
+            padding: 12px 25px;
+            background-color: var(--primary-blue);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 600;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .button-back:hover {
+            background-color: #0056b3;
+        }
+
         /* Media Queries for responsiveness */
         @media (max-width: 600px) {
             .results-summary .result-box {
                 width: 100%;
+            }
+            .section {
+                padding: 20px;
+            }
+            .card {
+                padding: 15px;
+            }
+            .guarantee-logos img {
+                height: 30px;
             }
         }
     </style>
@@ -210,7 +282,9 @@
                     <p class="imc-category" id="imc-category"></p>
                 </div>
             </div>
-            <p>Ce besoin journalier est la base pour définir votre stratégie. Pour perdre du poids, vous devez consommer moins de calories que ce montant.</p>
+            <p class="info-message">
+                Pour une perte de poids saine et durable, il est généralement recommandé de créer un déficit calorique de <strong>300 à 500 kcal</strong> par jour par rapport à vos besoins énergétiques totaux (TDEE).
+            </p>
         </div>
 
         <div class="section" id="main-recommendation">
@@ -231,6 +305,16 @@
             <div id="other-programs-container" class="program-cards">
             </div>
         </div>
+
+        <div class="guarantee-logos">
+            <p>Achetez en toute confiance :</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Visa_Inc._logo.svg/1200px-Visa_Inc._logo.svg.png" alt="Visa Logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard Logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/2560px-PayPal.svg.png" alt="PayPal Logo">
+            <p style="margin-top: 15px;">🔒 Garantie satisfait ou remboursé sous 14 jours !</p>
+        </div>
+
+        <a href="index.html" class="button-back">Recommencer un calcul</a>
     </div>
 
     <script>
@@ -287,15 +371,15 @@
 
             const dailyDeficit = tdee - dailyCaloricIntake;
 
-            if (dailyDeficit <= 50) { // Slightly increased threshold for "no estimated loss"
+            if (dailyDeficit <= 50) { // If the deficit is very small or negative
                 return "Pas de perte significative estimée (déficit calorique insuffisant)";
             }
 
-            const totalDeficit = dailyCaloricIntake > 0 ? dailyDeficit * DAYS_IN_3_MONTHS : 0; // Ensure positive intake
+            const totalDeficit = dailyDeficit * DAYS_IN_3_MONTHS;
             const estimatedLossKg = totalDeficit / CALORIES_PER_KG_FAT;
 
             if (estimatedLossKg < 0.5) { // If estimated loss is less than 500g
-                return "Perte minimale estimée";
+                return "Perte minimale estimée sur cette période"; // Message plus clair
             }
 
             return `~${estimatedLossKg.toFixed(1)} kg`; // Display 1 decimal place
@@ -306,7 +390,7 @@
             return `
                 <div class="card">
                     ${isRecommended ? '<div class="recommended-badge">Recommandé</div>' : ''}
-                    ${program.imageUrl ? `<img src="${program.imageUrl}" alt="${program.name}" class="card-image">` : ''}
+                    ${program.imageUrl ? `<img src="${program.imageUrl}" alt="${program.name}" class="card-image" loading="lazy">` : ''}
                     <div class="card-content">
                         <h3 class="card-title">${program.name}</h3>
                         <p class="card-details">
@@ -331,6 +415,7 @@
             const height = parseFloat(params.get('height'));
 
             if (isNaN(tdee) || isNaN(weight) || isNaN(height)) {
+                // Fallback for missing parameters, redirects to index or shows error
                 window.location.href = 'index.html';
                 return;
             }
