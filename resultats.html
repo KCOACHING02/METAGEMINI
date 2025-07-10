@@ -297,6 +297,7 @@
             `;
         }
 
+        // Execute code when the window has fully loaded
         window.addEventListener('load', function() {
             const params = new URLSearchParams(window.location.search);
             const bmr = parseInt(params.get('bmr'));
@@ -304,8 +305,9 @@
             const weight = parseFloat(params.get('weight')); // Get weight
             const height = parseFloat(params.get('height')); // Get height
 
+            // Basic validation and redirection if essential data is missing
             if (isNaN(tdee) || isNaN(weight) || isNaN(height)) {
-                // Redirect if TDEE, weight, or height are invalid
+                // Redirect if TDEE, weight, or height are invalid or missing
                 window.location.href = 'index.html';
                 return;
             }
@@ -315,49 +317,53 @@
             document.getElementById('tdee-result').textContent = tdee;
 
             // Calculate and display IMC
-            const heightInMeters = height / 100; // Convert height to meters
+            const heightInMeters = height / 100; // Convert height to meters for IMC calculation
             const imc = weight / (heightInMeters * heightInMeters);
-            document.getElementById('imc-result').textContent = imc.toFixed(1); // Display 1 decimal place
+            document.getElementById('imc-result').textContent = imc.toFixed(1); // Display 1 decimal place for IMC
             document.getElementById('imc-category').textContent = getIMCCategory(imc);
 
-            // Logique de recommandation (unchanged)
+            // Logic for main program recommendation
             const recommendedContainer = document.getElementById('recommended-program-container');
             let recommendedIds = [];
 
             if (tdee >= 1600 && tdee < 1800) {
-                recommendedIds.push(1, 2);
-                recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
+                recommendedIds.push(1, 2); // 10 and 14 days at 1300 kcal
             } else if (tdee >= 1800 && tdee < 2000) {
-                recommendedIds.push(3);
-                recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
+                recommendedIds.push(3); // Défi 14 days at 1400 kcal
             } else if (tdee >= 2000) {
-                recommendedIds.push(4);
-                recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
+                recommendedIds.push(4); // Challenge 4 weeks at 1500 kcal
             } else {
-                recommendedIds.push(1);
+                // For lower TDEE, recommend the lowest calorie program
+                recommendedIds.push(1); // 10 days for drying
                 document.getElementById('main-recommendation').innerHTML = `
                     <h2>Pour un Départ Rapide</h2>
                     <div class="program-cards">${createProgramCard(programs.find(p => p.id === 1), true)}</div>
                     <p style="text-align:center; margin-top:15px;">Avec votre métabolisme, un programme très bas en calories est nécessaire pour une perte de poids efficace.</p>
                 `;
             }
+            // Populate the recommended programs if the specific else block above didn't already
+            if (recommendedIds.length > 0 && recommendedContainer.innerHTML === '') {
+                recommendedContainer.innerHTML = programs.filter(p => recommendedIds.includes(p.id)).map(p => createProgramCard(p, true)).join('');
+            }
 
+
+            // Always display the 7-week challenge as a featured recommendation
             const challenge7Weeks = programs.find(p => p.id === 5);
             document.getElementById('challenge-7-weeks-container').innerHTML = createProgramCard(challenge7Weeks, true);
 
+            // Display other programs (those not already recommended and not the 7-week challenge)
             const otherContainer = document.getElementById('other-programs-container');
             otherContainer.innerHTML = programs.filter(p => !recommendedIds.includes(p.id) && p.id !== 5).map(p => createProgramCard(p)).join('');
 
-            // Add event listener for the new calculation button
+            // Add event listener for the new weight loss estimation button
             document.getElementById('calculate-loss-button').addEventListener('click', function() {
-                // TDEE is already available from URL params and parsed above
-                // const tdee = parseInt(params.get('tdee')); // No need to re-parse
-
+                // TDEE is already parsed at the beginning of the 'load' event
                 if (isNaN(tdee)) {
                     alert("Impossible de calculer l'estimation sans votre TDEE. Veuillez recommencer depuis la page précédente.");
                     return;
                 }
 
+                // Iterate through all programs to calculate and display the estimated loss
                 programs.forEach(program => {
                     const estimatedLossText = calculateEstimatedLoss(tdee, program.calories);
                     const lossElement = document.getElementById(`estimated-loss-${program.id}`);
