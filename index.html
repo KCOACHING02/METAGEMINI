@@ -14,7 +14,7 @@
     <style>
         :root {
             --primary-blue: #007bff;
-            --primary-green: #28a745; /* Moins utilisé directement pour les boutons principaux */
+            --primary-green: #28a745;
             --secondary-orange: #ff7f50; /* Couleur d'action principale */
             --text-dark: #2c3e50;
             --text-medium: #555;
@@ -156,6 +156,53 @@
             background-color: #e66a3d; /* Orange plus foncé au survol */
             transform: translateY(-2px); /* Léger effet de soulèvement */
         }
+
+        /* --- Styles pour l'overlay de chargement --- */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9); /* Fond blanc semi-transparent */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Assure qu'il est au-dessus de tout */
+            opacity: 0; /* Caché par défaut */
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out; /* Transition douce */
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .spinner {
+            border: 8px solid var(--border-light); /* Bordure claire du spinner */
+            border-top: 8px solid var(--primary-blue); /* Partie bleue du spinner */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite; /* Animation de rotation */
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-message {
+            font-size: 1.5em;
+            color: var(--text-dark);
+            font-weight: 600;
+            text-align: center;
+        }
+        /* Fin des styles pour l'overlay */
+
     </style>
 </head>
 <body>
@@ -208,6 +255,11 @@
         </form>
     </div>
 
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p class="loading-message">Calcul en cours...</p>
+    </div>
+
     <script>
         document.getElementById('metabolism-form').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -223,6 +275,10 @@
                 return;
             }
 
+            // Affiche l'overlay de chargement
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.add('active');
+
             let bmr;
             // Mifflin-St Jeor Equation
             if (gender === 'male') {
@@ -233,7 +289,11 @@
 
             const tdee = bmr * activityFactor;
 
-            window.location.href = `resultats.html?bmr=${bmr.toFixed(0)}&tdee=${tdee.toFixed(0)}&weight=${weight}&height=${height}`;
+            // Simule un temps de calcul avec un délai de 1.5 secondes
+            // Cela donne le temps à l'utilisateur de voir l'animation de chargement
+            setTimeout(() => {
+                window.location.href = `resultats.html?bmr=${bmr.toFixed(0)}&tdee=${tdee.toFixed(0)}&weight=${weight}&height=${height}`;
+            }, 1500); // Délai de 1.5 secondes
         });
     </script>
 
