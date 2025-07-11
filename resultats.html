@@ -87,12 +87,12 @@
         h3 { color: var(--primary-blue); }
         .result-box h3 {
             color: var(--text-dark);
-            font-size: 1rem; /* Légèrement réduit pour s'adapter à la nouvelle hauteur */
+            font-size: 0.8rem; /* Encore réduit */
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 5px; /* Réduit la marge en bas du titre */
+            margin-bottom: 2px; /* Encore réduit */
         }
 
         .results-summary {
@@ -101,16 +101,25 @@
             text-align: center;
             margin-bottom: 30px;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 20px; /* Espace entre les wrappers de résultats */
         }
+        .result-wrapper {
+            display: flex;
+            flex-direction: column; /* Pour empiler le pavé et sa définition */
+            align-items: center;
+            width: calc(33.33% - 20px); /* Ajuste la largeur pour 3 colonnes avec un écart */
+            box-sizing: border-box;
+            min-width: 150px; /* Largeur minimale pour la lisibilité */
+            flex: 1 1 auto; /* Permet aux éléments de s'étirer/rétrécir */
+        }
+
 
         /* --- MODIFICATIONS POUR LA HAUTEUR DES PAVÉS DE RÉSULTATS --- */
         .result-box {
             background-color: var(--bg-white);
-            padding: 10px 15px; /* Réduction du padding vertical (haut/bas) de 15px à 10px */
+            padding: 2px 5px; /* Réduction drastique du padding vertical et horizontal */
             border-radius: 10px;
-            width: calc(20% - 20px);
-            min-width: 150px;
+            width: 100%; /* Prend toute la largeur de son wrapper */
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -119,13 +128,12 @@
             border: 1px solid var(--border-light);
             box-shadow: 0 4px 15px var(--shadow-light);
             transition: transform 0.2s ease-in-out;
-            flex: 1 1 auto;
+            cursor: pointer; /* Rendre les pavés cliquables */
         }
 
         .result-box.imc {
-            padding: 10px 15px; /* Réduction du padding vertical pour l'IMC aussi */
-            width: calc(40% - 20px);
-            min-width: 250px;
+            padding: 2px 5px; /* Réduction pour l'IMC aussi */
+            width: 100%; /* Prend toute la largeur de son wrapper */
             margin-top: 0;
             background-color: #e6f7ff;
             border: 1px solid #91d5ff;
@@ -134,22 +142,22 @@
 
         /* Réduction de la taille des valeurs pour qu'elles s'adaptent mieux */
         .result-value {
-            font-size: 1.8em; /* Encore un peu réduit */
+            font-size: 1.2em; /* Encore réduit */
             font-weight: 700;
             color: var(--text-dark);
-            margin-bottom: 0; /* Réduction de la marge en bas de la valeur */
+            margin-bottom: 0;
         }
         .result-box .unit {
-            font-size: 0.7rem; /* Encore un peu réduit pour les unités */
+            font-size: 0.5rem; /* Encore réduit pour les unités */
             color: var(--text-light);
-            margin-top: 0; /* Réduction de la marge en haut de l'unité */
+            margin-top: 0;
         }
         /* --- FIN DES MODIFICATIONS POUR LA HAUTEUR DES PAVÉS DE RÉSULTATS --- */
 
         .imc-category {
-            font-size: 0.9rem; /* Réduction pour la catégorie IMC */
+            font-size: 0.7rem; /* Réduction pour la catégorie IMC */
             font-weight: 600;
-            margin-top: 5px; /* Ajustement de la marge */
+            margin-top: 2px; /* Ajustement de la marge */
             color: var(--text-medium);
         }
 
@@ -160,6 +168,23 @@
         .imc-severely-obese .imc-category,
         .imc-morbidly-obese .imc-category { color: #dc3545; }
         .imc-underweight .imc-category { color: #6c757d; }
+
+        /* Styles pour les panneaux de définition */
+        .definition-panel {
+            display: none; /* Caché par défaut */
+            background-color: #f0f8ff; /* Couleur de fond */
+            border: 1px solid #cceeff;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-top: 10px; /* Espacement avec le pavé au-dessus */
+            width: 100%; /* Prend la largeur de son wrapper */
+            box-sizing: border-box;
+            text-align: left;
+            font-size: 0.9em;
+            color: var(--text-dark);
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
 
         .program-cards {
             display: grid;
@@ -316,21 +341,17 @@
                 flex-direction: column;
                 align-items: center;
             }
-            .results-summary .result-box {
+            .result-wrapper {
                 width: calc(80% - 20px);
                 max-width: 300px;
-                margin-bottom: 20px;
+                margin-bottom: 20px; /* Space between stacked wrappers */
             }
             .result-box.imc {
-                width: calc(80% - 20px);
-                max-width: 300px;
+                width: 100%; /* Takes full width of its wrapper */
             }
         }
         @media (max-width: 600px) {
-            .results-summary .result-box {
-                width: calc(95% - 20px);
-            }
-            .result-box.imc {
+            .result-wrapper {
                 width: calc(95% - 20px);
             }
             .section {
@@ -352,23 +373,33 @@
 
     <div class="container">
         <div class="section header">
-            <h1>Vos Résultats Personnalisés</h1>
-            <div class="results-summary">
-                <div class="result-box">
-                    <h3><i class="fas fa-fire"></i> Métabolisme de Base</h3>
-                    <p class="result-value" id="bmr-result">0</p>
-                    <p class="unit">Calories / jour</p>
+            <h1>Vos Résultats</h1> <div class="results-summary">
+                <div class="result-wrapper">
+                    <div class="result-box" id="bmr-result-box">
+                        <h3><i class="fas fa-fire"></i> Métabolisme de Base</h3>
+                        <p class="result-value" id="bmr-result">0</p>
+                        <p class="unit">Calories / jour</p>
+                    </div>
+                    <div class="definition-panel" id="bmr-definition-panel"></div>
                 </div>
-                <div class="result-box">
-                    <h3><i class="fas fa-balance-scale"></i> Maintien du Poids</h3>
-                    <p class="result-value" id="tdee-result">0</p>
-                    <p class="unit">Calories / jour</p>
+
+                <div class="result-wrapper">
+                    <div class="result-box" id="tdee-result-box">
+                        <h3><i class="fas fa-balance-scale"></i> Maintien du Poids</h3>
+                        <p class="result-value" id="tdee-result">0</p>
+                        <p class="unit">Calories / jour</p>
+                    </div>
+                    <div class="definition-panel" id="tdee-definition-panel"></div>
                 </div>
-                <div class="result-box imc" id="imc-box">
-                    <h3><i class="fas fa-chart-line"></i> Votre Indice de Masse Corporelle (IMC)</h3>
-                    <p class="result-value" id="imc-result">0.0</p>
-                    <p class="unit">kg/m²</p>
-                    <p class="imc-category" id="imc-category"></p>
+
+                <div class="result-wrapper">
+                    <div class="result-box imc" id="imc-box">
+                        <h3><i class="fas fa-chart-line"></i> Votre Indice de Masse Corporelle (IMC)</h3>
+                        <p class="result-value" id="imc-result">0.0</p>
+                        <p class="unit">kg/m²</p>
+                        <p class="imc-category" id="imc-category"></p>
+                    </div>
+                    <div class="definition-panel" id="imc-definition-panel"></div>
                 </div>
             </div>
             <p class="info-message">
@@ -564,6 +595,52 @@
                     }
                 });
             }
+
+            // --- Logique pour les définitions sous les pavés ---
+            const definitions = {
+                'bmr': {
+                    title: "Métabolisme de Base (MB)",
+                    description: "L'énergie minimale dont votre corps a besoin pour fonctionner au repos (respiration, circulation, maintien de la température corporelle, fonctions cellulaires). C'est la quantité de calories que votre corps brûle simplement pour exister, sans aucune activité physique."
+                },
+                'tdee': {
+                    title: "Maintien du Poids (TDEE)",
+                    description: "Le nombre total de calories que votre corps brûle en une journée. Cela inclut votre métabolisme de base, l'énergie dépensée pour l'activité physique, la digestion des aliments (effet thermique des aliments) et d'autres activités non liées à l'exercice. C'est la quantité de calories dont vous avez besoin pour maintenir votre poids actuel."
+                },
+                'imc': {
+                    title: "Indice de Masse Corporelle (IMC)",
+                    description: "Un indicateur simple du rapport poids/taille, couramment utilisé pour évaluer le sous-poids, le poids normal, le surpoids et l'obésité chez l'adulte. Il est calculé en divisant le poids (en kilogrammes) par le carré de la taille (en mètres). L'IMC ne prend pas en compte la composition corporelle (masse musculaire vs masse grasse)."
+                }
+            };
+
+            const bmrBox = document.getElementById('bmr-result-box');
+            const tdeeBox = document.getElementById('tdee-result-box');
+            const imcBox = document.getElementById('imc-box');
+
+            const bmrDefinitionPanel = document.getElementById('bmr-definition-panel');
+            const tdeeDefinitionPanel = document.getElementById('tdee-definition-panel');
+            const imcDefinitionPanel = document.getElementById('imc-definition-panel');
+
+            function toggleDefinition(box, panel, type) {
+                // Cacher tous les autres panneaux avant d'afficher le nouveau
+                [bmrDefinitionPanel, tdeeDefinitionPanel, imcDefinitionPanel].forEach(p => {
+                    if (p !== panel) {
+                        p.style.display = 'none';
+                    }
+                });
+
+                if (panel.style.display === 'block') {
+                    panel.style.display = 'none';
+                } else {
+                    panel.innerHTML = `<strong>${definitions[type].title}</strong>: ${definitions[type].description}`;
+                    panel.style.display = 'block';
+                }
+            }
+
+            bmrBox.addEventListener('click', () => toggleDefinition(bmrBox, bmrDefinitionPanel, 'bmr'));
+            tdeeBox.addEventListener('click', () => toggleDefinition(tdeeBox, tdeeDefinitionPanel, 'tdee'));
+            imcBox.addEventListener('click', () => toggleDefinition(imcBox, imcDefinitionPanel, 'imc'));
+            // --- Fin de la logique pour les définitions ---
+
         });
     </script>
 
