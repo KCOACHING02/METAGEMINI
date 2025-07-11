@@ -87,12 +87,12 @@
         h3 { color: var(--primary-blue); }
         .result-box h3 {
             color: var(--text-dark);
-            font-size: 1.1rem;
+            font-size: 1rem; /* Légèrement réduit pour s'adapter à la nouvelle hauteur */
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 5px; /* Réduit la marge en bas du titre */
         }
 
         .results-summary {
@@ -104,14 +104,13 @@
             gap: 20px;
         }
 
-        /* --- DÉBUT DES MODIFICATIONS POUR LA TAILLE DES PAVÉS DE RÉSULTATS --- */
+        /* --- MODIFICATIONS POUR LA HAUTEUR DES PAVÉS DE RÉSULTATS --- */
         .result-box {
             background-color: var(--bg-white);
-            padding: 15px; /* Réduction du padding */
+            padding: 10px 15px; /* Réduction du padding vertical (haut/bas) de 15px à 10px */
             border-radius: 10px;
-            /* width: calc(33.33% - 20px); Ancien style pour 3 colonnes */
-            width: calc(20% - 20px); /* Réduction de la largeur pour les 2 premiers pavés, environ la moitié de l'original */
-            min-width: 150px; /* Taille minimale pour ne pas être trop petit */
+            width: calc(20% - 20px);
+            min-width: 150px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -120,37 +119,37 @@
             border: 1px solid var(--border-light);
             box-shadow: 0 4px 15px var(--shadow-light);
             transition: transform 0.2s ease-in-out;
-            /* Ajustement pour aligner les 3 sur une ligne si l'écran est assez grand */
-            flex: 1 1 auto; /* Permet aux éléments de grandir mais pas de shrinker au-delà de min-width */
+            flex: 1 1 auto;
         }
 
-        /* Ajustement spécifique pour le pavé IMC pour le rendre également plus petit mais conserver sa particularité */
         .result-box.imc {
-            /* width: 100%; Ancien style */
-            width: calc(40% - 20px); /* Réduction pour l'IMC, il prendra plus de place que les 2 autres mais moins qu'avant */
-            min-width: 250px; /* Ajuste la taille minimale pour l'IMC */
-            margin-top: 0; /* Pas de marge supérieure si on les aligne */
+            padding: 10px 15px; /* Réduction du padding vertical pour l'IMC aussi */
+            width: calc(40% - 20px);
+            min-width: 250px;
+            margin-top: 0;
             background-color: #e6f7ff;
             border: 1px solid #91d5ff;
-            order: 3; /* Placer l'IMC en dernier pour qu'il s'aligne après les deux autres */
+            order: 3;
         }
 
-        /* Réduction de la taille des valeurs pour qu'elles s'adaptent mieux aux pavés réduits */
+        /* Réduction de la taille des valeurs pour qu'elles s'adaptent mieux */
         .result-value {
-            font-size: 2em; /* Réduction de la taille de la police */
+            font-size: 1.8em; /* Encore un peu réduit */
             font-weight: 700;
             color: var(--text-dark);
+            margin-bottom: 0; /* Réduction de la marge en bas de la valeur */
         }
         .result-box .unit {
-            font-size: 0.8rem; /* Réduction de la taille de la police pour les unités */
+            font-size: 0.7rem; /* Encore un peu réduit pour les unités */
             color: var(--text-light);
+            margin-top: 0; /* Réduction de la marge en haut de l'unité */
         }
-        /* --- FIN DES MODIFICATIONS POUR LA TAILLE DES PAVÉS DE RÉSULTATS --- */
+        /* --- FIN DES MODIFICATIONS POUR LA HAUTEUR DES PAVÉS DE RÉSULTATS --- */
 
         .imc-category {
-            font-size: 1.1rem;
+            font-size: 0.9rem; /* Réduction pour la catégorie IMC */
             font-weight: 600;
-            margin-top: 10px;
+            margin-top: 5px; /* Ajustement de la marge */
             color: var(--text-medium);
         }
 
@@ -314,22 +313,22 @@
         /* Media Queries for responsiveness */
         @media (max-width: 768px) {
             .results-summary {
-                flex-direction: column; /* Empile les éléments en colonne sur les petits écrans */
-                align-items: center; /* Centre les éléments */
+                flex-direction: column;
+                align-items: center;
             }
             .results-summary .result-box {
-                width: calc(80% - 20px); /* Prend 80% de la largeur du parent sur les petits écrans */
-                max-width: 300px; /* Limite la taille maximale pour ne pas être trop grand */
-                margin-bottom: 20px; /* Ajoute un espacement entre les blocs empilés */
+                width: calc(80% - 20px);
+                max-width: 300px;
+                margin-bottom: 20px;
             }
             .result-box.imc {
-                width: calc(80% - 20px); /* L'IMC prend aussi 80% sur les petits écrans */
+                width: calc(80% - 20px);
                 max-width: 300px;
             }
         }
         @media (max-width: 600px) {
             .results-summary .result-box {
-                width: calc(95% - 20px); /* 1 colonne sur très petits écrans */
+                width: calc(95% - 20px);
             }
             .result-box.imc {
                 width: calc(95% - 20px);
