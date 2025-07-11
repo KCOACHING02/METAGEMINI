@@ -29,7 +29,6 @@
 
         body {
             font-family: var(--font-primary);
-            /* Nouveau : Dégradé de fond subtil pour cohérence avec index.html */
             background: linear-gradient(135deg, var(--bg-light) 0%, #e8f0ef 100%);
             color: var(--text-medium);
             line-height: 1.6;
@@ -37,7 +36,7 @@
             padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Alignement en haut pour les contenus longs */
+            align-items: flex-start;
             min-height: 100vh;
         }
         .container {
@@ -51,7 +50,7 @@
             border-radius: 12px;
             box-shadow: 0 8px 30px var(--shadow-light);
             margin-bottom: 25px;
-            box-sizing: border-box; /* Important for consistent padding */
+            box-sizing: border-box;
         }
         .header {
             text-align: center;
@@ -61,8 +60,8 @@
         }
         h1, h2, h3 {
             font-family: var(--font-primary);
-            font-weight: 700; /* Plus de poids pour les titres */
-            letter-spacing: -0.02em; /* Léger resserrement pour un look moderne */
+            font-weight: 700;
+            letter-spacing: -0.02em;
             color: var(--text-dark);
         }
         h1 { font-size: 2.2rem; color: var(--primary-blue); margin-bottom: 15px;}
@@ -70,33 +69,31 @@
             text-align: center;
             font-size: 1.8rem;
             margin-bottom: 30px;
-            padding-bottom: 15px; /* Nouveau : padding pour la ligne */
-            border-bottom: 2px solid var(--primary-blue); /* Nouveau : ligne de séparation */
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-blue);
             position: relative;
         }
-        /* Nouveau : petit pseudo-élément pour la ligne sous les h2, pour un effet plus doux */
         h2::after {
             content: '';
             position: absolute;
             left: 50%;
-            bottom: -2px; /* Sous la bordure */
+            bottom: -2px;
             transform: translateX(-50%);
-            width: 50px; /* Longueur de la ligne courte */
-            height: 4px; /* Épaisseur de la ligne */
-            background-color: var(--secondary-orange); /* Couleur d'accentuation */
+            width: 50px;
+            height: 4px;
+            background-color: var(--secondary-orange);
             border-radius: 2px;
         }
-        h3 { color: var(--primary-blue); } /* Couleur bleue pour les h3 dans les sections ou cartes */
+        h3 { color: var(--primary-blue); }
         .result-box h3 {
-            color: var(--text-dark); /* Couleur plus foncée pour les titres de boîte de résultat */
-            font-size: 1.1rem; /* Légèrement plus grand */
-            display: flex; /* Pour aligner icône et texte */
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px; /* Espace entre icône et texte */
-            margin-bottom: 10px; /* Nouveau : espace en dessous du titre */
+            gap: 8px;
+            margin-bottom: 10px;
         }
-
 
         .results-summary {
             display: flex;
@@ -106,31 +103,50 @@
             flex-wrap: wrap;
             gap: 20px;
         }
+
+        /* --- DÉBUT DES MODIFICATIONS POUR LA TAILLE DES PAVÉS DE RÉSULTATS --- */
         .result-box {
-            background-color: var(--bg-white); /* Fond blanc pour les cartes */
-            padding: 20px;
-            border-radius: 10px; /* Bordure légèrement arrondie */
-            width: calc(33.33% - 20px); /* Ajuster la largeur pour 3 colonnes et le gap */
+            background-color: var(--bg-white);
+            padding: 15px; /* Réduction du padding */
+            border-radius: 10px;
+            /* width: calc(33.33% - 20px); Ancien style pour 3 colonnes */
+            width: calc(20% - 20px); /* Réduction de la largeur pour les 2 premiers pavés, environ la moitié de l'original */
+            min-width: 150px; /* Taille minimale pour ne pas être trop petit */
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 1px solid var(--border-light); /* Nouvelle : bordure légère */
-            box-shadow: 0 4px 15px var(--shadow-light); /* Nouvelle : ombre pour un effet carte */
-            transition: transform 0.2s ease-in-out; /* Pour un petit effet au survol */
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 15px var(--shadow-light);
+            transition: transform 0.2s ease-in-out;
+            /* Ajustement pour aligner les 3 sur une ligne si l'écran est assez grand */
+            flex: 1 1 auto; /* Permet aux éléments de grandir mais pas de shrinker au-delà de min-width */
         }
-        .result-box:hover {
-            transform: translateY(-5px); /* Léger soulèvement au survol */
-        }
+
+        /* Ajustement spécifique pour le pavé IMC pour le rendre également plus petit mais conserver sa particularité */
         .result-box.imc {
-            width: 100%; /* IMC prend la largeur totale */
-            margin-top: 10px;
+            /* width: 100%; Ancien style */
+            width: calc(40% - 20px); /* Réduction pour l'IMC, il prendra plus de place que les 2 autres mais moins qu'avant */
+            min-width: 250px; /* Ajuste la taille minimale pour l'IMC */
+            margin-top: 0; /* Pas de marge supérieure si on les aligne */
             background-color: #e6f7ff;
             border: 1px solid #91d5ff;
+            order: 3; /* Placer l'IMC en dernier pour qu'il s'aligne après les deux autres */
         }
-        .result-value { font-size: 2.8em; font-weight: 700; color: var(--text-dark); }
-        .unit { font-size: 1rem; color: var(--text-light); }
+
+        /* Réduction de la taille des valeurs pour qu'elles s'adaptent mieux aux pavés réduits */
+        .result-value {
+            font-size: 2em; /* Réduction de la taille de la police */
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .result-box .unit {
+            font-size: 0.8rem; /* Réduction de la taille de la police pour les unités */
+            color: var(--text-light);
+        }
+        /* --- FIN DES MODIFICATIONS POUR LA TAILLE DES PAVÉS DE RÉSULTATS --- */
+
         .imc-category {
             font-size: 1.1rem;
             font-weight: 600;
@@ -139,13 +155,12 @@
         }
 
         /* Styles spécifiques pour l'IMC */
-        .imc-normal .imc-category { color: var(--primary-green); } /* Vert pour poids normal */
-        .imc-overweight .imc-category { color: #ff9800; } /* Orange pour surpoids */
+        .imc-normal .imc-category { color: var(--primary-green); }
+        .imc-overweight .imc-category { color: #ff9800; }
         .imc-obese .imc-category,
         .imc-severely-obese .imc-category,
-        .imc-morbidly-obese .imc-category { color: #dc3545; } /* Rouge pour obésité */
-        .imc-underweight .imc-category { color: #6c757d; } /* Gris pour sous-poids */
-
+        .imc-morbidly-obese .imc-category { color: #dc3545; }
+        .imc-underweight .imc-category { color: #6c757d; }
 
         .program-cards {
             display: grid;
@@ -160,11 +175,11 @@
             flex-direction: column;
             padding: 25px;
             box-shadow: 0 4px 15px var(--shadow-light);
-            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; /* Smooth transition */
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
             position: relative;
         }
         .card:hover {
-            transform: translateY(-8px) scale(1.02); /* Slight lift and scale */
+            transform: translateY(-8px) scale(1.02);
             box-shadow: 0 10px 30px var(--shadow-medium);
         }
         .card-image {
@@ -173,8 +188,8 @@
             border-radius: 8px 8px 0 0;
             margin-bottom: 15px;
             object-fit: contain;
-            display: block; /* Ensures no extra space below image */
-            border: 1px solid var(--border-light); /* Nouvelle bordure subtile pour l'image */
+            display: block;
+            border: 1px solid var(--border-light);
         }
         .card-content {
             flex-grow: 1;
@@ -191,14 +206,14 @@
             margin-bottom: 15px;
         }
         .card-details strong {
-            display: flex; /* Permet d'aligner icône et texte */
+            display: flex;
             align-items: center;
-            gap: 5px; /* Espace entre l'icône et le texte */
+            gap: 5px;
         }
         .card-price {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #000000; /* PRIX EN NOIR */
+            color: #000000;
             margin-bottom: 15px;
         }
         .buy-button {
@@ -214,7 +229,7 @@
             transition: background-color 0.3s ease-in-out;
         }
         .buy-button:hover {
-            background-color: #e66a3d; /* Darker orange */
+            background-color: #e66a3d;
         }
         .recommended-badge {
             position: absolute;
@@ -228,18 +243,17 @@
             border-radius: 5px;
             transform: rotate(30deg);
         }
-        /* Styles pour l'estimation de la perte de poids - EN VERT */
         .estimated-loss {
             font-weight: 700;
             font-size: 1.1em;
-            color: #155724; /* Texte vert foncé */
-            background-color: #d4edda; /* Fond vert clair */
+            color: #155724;
+            background-color: #d4edda;
             padding: 8px 10px;
             border-radius: 5px;
             margin-top: 10px;
             margin-bottom: 15px;
             text-align: center;
-            border: 1px solid var(--primary-green); /* Bordure verte */
+            border: 1px solid var(--primary-green);
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             line-height: 1.4;
             min-height: 50px;
@@ -273,7 +287,7 @@
             margin-bottom: 15px;
         }
         .guarantee-logos img {
-            height: 40px; /* Adjust size as needed */
+            height: 40px;
             margin: 0 10px;
             vertical-align: middle;
         }
@@ -289,9 +303,9 @@
             font-size: 17px;
             font-weight: 600;
             transition: background-color 0.3s ease-in-out;
-            display: flex; /* Pour aligner l'icône et le texte */
+            display: flex;
             align-items: center;
-            gap: 8px; /* Espace entre l'icône et le texte */
+            gap: 8px;
         }
         .button-back:hover {
             background-color: #0056b3;
@@ -299,16 +313,26 @@
 
         /* Media Queries for responsiveness */
         @media (max-width: 768px) {
+            .results-summary {
+                flex-direction: column; /* Empile les éléments en colonne sur les petits écrans */
+                align-items: center; /* Centre les éléments */
+            }
             .results-summary .result-box {
-                width: calc(50% - 15px); /* 2 colonnes sur les petits écrans */
+                width: calc(80% - 20px); /* Prend 80% de la largeur du parent sur les petits écrans */
+                max-width: 300px; /* Limite la taille maximale pour ne pas être trop grand */
+                margin-bottom: 20px; /* Ajoute un espacement entre les blocs empilés */
             }
             .result-box.imc {
-                width: 100%; /* IMC reste en pleine largeur */
+                width: calc(80% - 20px); /* L'IMC prend aussi 80% sur les petits écrans */
+                max-width: 300px;
             }
         }
         @media (max-width: 600px) {
             .results-summary .result-box {
-                width: 100%; /* 1 colonne sur très petits écrans */
+                width: calc(95% - 20px); /* 1 colonne sur très petits écrans */
+            }
+            .result-box.imc {
+                width: calc(95% - 20px);
             }
             .section {
                 padding: 20px;
@@ -491,7 +515,7 @@
             const heightInMeters = height / 100;
             const imc = weight / (heightInMeters * heightInMeters);
             document.getElementById('imc-result').textContent = imc.toFixed(1);
-            document.getElementById('imc-category').textContent = getIMCCategory(imc); // Appelle la fonction pour définir la catégorie et la couleur
+            document.getElementById('imc-category').textContent = getIMCCategory(imc);
 
             // Logic for main program recommendation
             const recommendedContainer = document.getElementById('recommended-program-container');
@@ -525,7 +549,7 @@
             // Always display the 7-week challenge as a featured recommendation
             const challenge7Weeks = programs.find(p => p.id === 5);
             document.getElementById('challenge-7-weeks-container').innerHTML = createProgramCard(challenge7Weeks, true);
-            recommendedIdsForFiltering.push(challenge7Weeks.id); // Add 7-week challenge to filtered IDs
+            recommendedIdsForFiltering.push(challenge7Weeks.id);
 
             // Display other programs (those not already recommended and not the 7-week challenge)
             const otherContainer = document.getElementById('other-programs-container');
