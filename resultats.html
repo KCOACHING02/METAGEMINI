@@ -1,211 +1,243 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vos Résultats et Programmes Recommandés</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* Styles conservés tels que définis dans ton script original */
-        /* ... (tu peux garder tout ton CSS tel quel ici) ... */
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vos Résultats et Programmes Recommandés</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" />
+
+  <style>
+    /* Ton CSS original est conservé ici sans modification */
+    /* ... (styles :root, body, .container, .section, .header, h1-h3, .results-summary, .result-box, .definition-panel, .program-cards, .card, .buy-button, etc.) ... */
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="section header">
-            <h1>Vos Résultats</h1>
-            <div class="results-summary">
-                <!-- Résultats BMR, TDEE, IMC -->
-                <!-- ... (identique à ton script original) ... -->
-            </div>
-            <p class="info-message">
-                Pour une perte de poids saine et durable, il est généralement recommandé de créer un déficit calorique de <strong>300 à 500 kcal</strong> par jour par rapport à vos besoins énergétiques totaux (TDEE).
-            </p>
+  <div class="container">
+    <div class="section header">
+      <h1>Vos Résultats</h1>
+      <div class="results-summary">
+        <div class="result-wrapper">
+          <div class="result-box" id="bmr-result-box">
+            <h3><i class="fas fa-fire"></i> Métabolisme de Base</h3>
+            <p class="result-value" id="bmr-result">0</p>
+            <p class="unit">Calories / jour</p>
+          </div>
+          <div class="definition-panel" id="bmr-definition-panel"></div>
         </div>
 
-        <div class="section" id="main-recommendation">
-            <h2>Votre Programme Idéal Pour Démarrer</h2>
-            <div id="recommended-program-container" class="program-cards"></div>
+        <div class="result-wrapper">
+          <div class="result-box" id="tdee-result-box">
+            <h3><i class="fas fa-balance-scale"></i> Maintien du Poids</h3>
+            <p class="result-value" id="tdee-result">0</p>
+            <p class="unit">Calories / jour</p>
+          </div>
+          <div class="definition-panel" id="tdee-definition-panel"></div>
         </div>
 
-        <div class="section" id="complete-challenge">
-            <h2>Notre Recommandation Phare : Le Défi Complet</h2>
-            <div id="challenge-7-weeks-container" class="program-cards"></div>
+        <div class="result-wrapper">
+          <div class="result-box imc" id="imc-box">
+            <h3><i class="fas fa-chart-line"></i> Votre Indice de Masse Corporelle (IMC)</h3>
+            <p class="result-value" id="imc-result">0.0</p>
+            <p class="unit">kg/m²</p>
+            <p class="imc-category" id="imc-category"></p>
+          </div>
+          <div class="definition-panel" id="imc-definition-panel"></div>
         </div>
+      </div>
 
-        <div class="guarantee-logos">
-            <p>Achetez en toute confiance :</p>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Visa_Inc._logo.svg/1200px-Visa_Inc._logo.svg.png" alt="Visa Logo">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard Logo">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/2560px-PayPal.svg.png" alt="PayPal Logo">
-        </div>
-
-        <a href="index.html" class="button-back"><i class="fas fa-arrow-left"></i> Recommencer un calcul</a>
+      <p class="info-message">
+        Pour une perte de poids saine et durable, il est généralement recommandé de créer un déficit calorique de <strong>300 à 500 kcal</strong> par jour par rapport à vos besoins énergétiques totaux (TDEE).
+      </p>
     </div>
 
-    <script>
-        const programs = [
-            {
-                id: 2,
-                name: "14 jours pour sécher",
-                price: "14,99€",
-                calories: 1300,
-                duration: "14 jours",
-                description: "Prolongez l'effort pour des résultats plus consolidés avec ce plan efficace.",
-                link: "https://shop.beacons.ai/kcoaching/cf28c7c7-cbad-44c6-b3cd-59419c8163d3",
-                imageUrl: "14 JOURS POUR SECHER.PNG"
-            },
-            {
-                id: 5,
-                name: "Challenge 7 semaines",
-                price: "29,99€",
-                calories: "Variable",
-                duration: "7 semaines",
-                description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.",
-                link: "https://shop.beacons.ai/kcoaching/5fee0cd5-b961-4699-b2c7-f73591d9bfbb",
-                imageUrl: "CHALLENGE 7 SEMAINES.PNG"
-            }
-        ];
+    <div class="section" id="main-recommendation">
+      <h2>Votre Programme Idéal Pour Démarrer</h2>
+      <div id="recommended-program-container" class="program-cards"></div>
+    </div>
 
-        function calculateEstimatedLoss(tdee, programCalories) {
-            const CALORIES_PER_KG_FAT = 7700;
-            const DAYS_IN_3_MONTHS = 90;
-            let dailyCaloricIntake = programCalories === "Variable" ? 1350 : programCalories;
-            const dailyDeficit = tdee - dailyCaloricIntake;
-            if (dailyDeficit <= 50) return "Pas de perte significative estimée (déficit calorique insuffisant)";
-            const totalDeficit = dailyDeficit * DAYS_IN_3_MONTHS;
-            const estimatedLossKg = totalDeficit / CALORIES_PER_KG_FAT;
-            return estimatedLossKg < 0.5 ? "Perte minimale estimée sur cette période" : `~${estimatedLossKg.toFixed(1)} kg`;
-        }
+    <div class="section" id="complete-challenge">
+      <h2>Notre Recommandation Phare : Le Défi Complet</h2>
+      <div id="challenge-7-weeks-container" class="program-cards"></div>
+    </div>
 
-        function createProgramCard(program, isRecommended = false) {
-            return `
-                <div class="card">
-                    ${isRecommended ? '<div class="recommended-badge">Recommandé</div>' : ''}
-                    ${program.imageUrl ? `<img src="${program.imageUrl}" alt="${program.name}" class="card-image" loading="lazy">` : ''}
-                    <div class="card-content">
-                        <h3 class="card-title">${program.name}</h3>
-                        <p class="card-details">
-                            <strong><i class="fas fa-fire"></i> Calories :</strong> ${program.calories === 'Variable' ? 'Progressives' : program.calories + ' kcal/jour'}<br>
-                            <strong><i class="fas fa-hourglass-half"></i> Durée :</strong> ${program.duration}
-                        </p>
-                        <p>${program.description}</p>
-                    </div>
-                    <div class="card-price">${program.price}</div>
-                    <p class="estimated-loss" id="estimated-loss-${program.id}"></p>
-                    <a href="${program.link}" class="buy-button">Choisir ce programme</a>
-                </div>
-            `;
-        }
+    <div class="guarantee-logos">
+      <p>Achetez en toute confiance :</p>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Visa_Inc._logo.svg/1200px-Visa_Inc._logo.svg.png" alt="Visa Logo" />
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard Logo" />
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/2560px-PayPal.svg.png" alt="PayPal Logo" />
+    </div>
 
-        window.addEventListener('load', function() {
-            const params = new URLSearchParams(window.location.search);
-            const bmr = parseInt(params.get('bmr'));
-            const tdee = parseInt(params.get('tdee'));
-            const weight = parseFloat(params.get('weight'));
-            const height = parseFloat(params.get('height'));
+    <a href="index.html" class="button-back"><i class="fas fa-arrow-left"></i> Recommencer un calcul</a>
+  </div>
 
-            if (isNaN(tdee) || isNaN(weight) || isNaN(height)) {
-                window.location.href = 'index.html';
-                return;
-            }
+  <script>
+    const programs = [
+      {
+        id: 2,
+        name: "14 jours pour sécher",
+        price: "14,99€",
+        calories: 1300,
+        duration: "14 jours",
+        description: "Prolongez l'effort pour des résultats plus consolidés avec ce plan efficace.",
+        link: "https://shop.beacons.ai/kcoaching/cf28c7c7-cbad-44c6-b3cd-59419c8163d3",
+        imageUrl: "14 JOURS POUR SECHER.PNG"
+      },
+      {
+        id: 5,
+        name: "Challenge 7 semaines",
+        price: "29,99€",
+        calories: "Variable",
+        duration: "7 semaines",
+        description: "La solution la plus complète avec une variation de calories pour décupler les résultats et éviter la stagnation.",
+        link: "https://shop.beacons.ai/kcoaching/5fee0cd5-b961-4699-b2c7-f73591d9bfbb",
+        imageUrl: "CHALLENGE 7 SEMAINES.PNG"
+      }
+    ];
 
-            document.getElementById('bmr-result').textContent = bmr;
-            document.getElementById('tdee-result').textContent = tdee;
+    function calculateEstimatedLoss(tdee, programCalories) {
+      const CALORIES_PER_KG_FAT = 7700;
+      const DAYS_IN_3_MONTHS = 90;
+      let dailyCaloricIntake = programCalories === "Variable" ? 1350 : programCalories;
+      const dailyDeficit = tdee - dailyCaloricIntake;
+      if (dailyDeficit <= 50) return "Pas de perte significative estimée (déficit calorique insuffisant)";
+      const totalDeficit = dailyDeficit * DAYS_IN_3_MONTHS;
+      const estimatedLossKg = totalDeficit / CALORIES_PER_KG_FAT;
+      return estimatedLossKg < 0.5 ? "Perte minimale estimée sur cette période" : `~${estimatedLossKg.toFixed(1)} kg`;
+    }
 
-            const heightInMeters = height / 100;
-            const imc = weight / (heightInMeters * heightInMeters);
-            document.getElementById('imc-result').textContent = imc.toFixed(1);
-            document.getElementById('imc-category').textContent = getIMCCategory(imc);
+    function createProgramCard(program, isRecommended = false) {
+      return `
+        <div class="card">
+          ${isRecommended ? '<div class="recommended-badge">Recommandé</div>' : ''}
+          ${program.imageUrl ? `<img src="${program.imageUrl}" alt="${program.name}" class="card-image" loading="lazy">` : ''}
+          <div class="card-content">
+            <h3 class="card-title">${program.name}</h3>
+            <p class="card-details">
+              <strong><i class="fas fa-fire"></i> Calories :</strong> ${program.calories === 'Variable' ? 'Progressives' : program.calories + ' kcal/jour'}<br>
+              <strong><i class="fas fa-hourglass-half"></i> Durée :</strong> ${program.duration}
+            </p>
+            <p>${program.description}</p>
+          </div>
+          <div class="card-price">${program.price}</div>
+          <p class="estimated-loss" id="estimated-loss-${program.id}"></p>
+          <a href="${program.link}" class="buy-button">Choisir ce programme</a>
+        </div>
+      `;
+    }
 
-            document.getElementById('recommended-program-container').innerHTML = createProgramCard(programs[0], true);
-            document.getElementById('challenge-7-weeks-container').innerHTML = createProgramCard(programs[1], true);
+    window.addEventListener('load', function () {
+      const params = new URLSearchParams(window.location.search);
+      const bmr = parseInt(params.get('bmr'));
+      const tdee = parseInt(params.get('tdee'));
+      const weight = parseFloat(params.get('weight'));
+      const height = parseFloat(params.get('height'));
 
-            programs.forEach(program => {
-                const estimatedLossText = calculateEstimatedLoss(tdee, program.calories);
-                const lossElement = document.getElementById(`estimated-loss-${program.id}`);
-                if (lossElement) {
+      if (isNaN(tdee) || isNaN(weight) || isNaN(height)) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      document.getElementById('bmr-result').textContent = bmr;
+      document.getElementById('tdee-result').textContent = tdee;
+
+      const heightInMeters = height / 100;
+      const imc = weight / (heightInMeters * heightInMeters);
+      document.getElementById('imc-result').textContent = imc.toFixed(1);
+      document.getElementById('imc-category').textContent = getIMCCategory(imc);
+
+      document.getElementById('recommended-program-container').innerHTML = createProgramCard(programs[0], true);
+      document.getElementById('challenge-7-weeks-container').innerHTML = createProgramCard(programs[1], true);
+
+      programs.forEach(program => {
+        const estimatedLossText = calculateEstimatedLoss(tdee, program.calories);
+        const lossElement = document.getElementById(`estimated-loss-${program.id}`);
+        if (lossElement) {
                     lossElement.textContent = `Perte estimée sur 3 mois : ${estimatedLossText}`;
-                }
-            });
+        }
+      });
 
-            // Définition des panneaux interactifs
-            const definitions = {
-                'bmr': {
-                    title: "Métabolisme de Base (MB)",
-                    description: "L'énergie minimale dont votre corps a besoin pour fonctionner au repos..."
-                },
-                'tdee': {
-                    title: "Maintien du Poids (TDEE)",
-                    description: "Le nombre total de calories que votre corps brûle en une journée..."
-                },
-                'imc': {
-                    title: "Indice de Masse Corporelle (IMC)",
-                    description: "Un indicateur simple du rapport poids/taille..."
-                }
-            };
+      // Logique des définitions interactives
+      const definitions = {
+        'bmr': {
+          title: "Métabolisme de Base (MB)",
+          description: "L'énergie minimale dont votre corps a besoin pour fonctionner au repos (respiration, circulation, maintien de la température corporelle, fonctions cellulaires)."
+        },
+        'tdee': {
+          title: "Maintien du Poids (TDEE)",
+          description: "Le nombre total de calories que votre corps brûle en une journée, incluant le métabolisme de base, l'activité physique et la digestion."
+        },
+        'imc': {
+          title: "Indice de Masse Corporelle (IMC)",
+          description: "Un indicateur du rapport poids/taille utilisé pour évaluer la corpulence. Il ne distingue pas la masse musculaire de la masse grasse."
+        }
+      };
 
-            function toggleDefinition(box, panel, type) {
-                [bmrDefinitionPanel, tdeeDefinitionPanel, imcDefinitionPanel].forEach(p => {
-                    if (p !== panel) p.style.display = 'none';
-                });
-                if (panel.style.display === 'block') {
-                    panel.style.display = 'none';
-                } else {
-                    panel.innerHTML = `<strong>${definitions[type].title}</strong>: ${definitions[type].description}`;
-                    panel.style.display = 'block';
-                }
-            }
+      const bmrBox = document.getElementById('bmr-result-box');
+      const tdeeBox = document.getElementById('tdee-result-box');
+      const imcBox = document.getElementById('imc-box');
 
-            const bmrBox = document.getElementById('bmr-result-box');
-            const tdeeBox = document.getElementById('tdee-result-box');
-            const imcBox = document.getElementById('imc-box');
-            const bmrDefinitionPanel = document.getElementById('bmr-definition-panel');
-            const tdeeDefinitionPanel = document.getElementById('tdee-definition-panel');
-            const imcDefinitionPanel = document.getElementById('imc-definition-panel
-                                                                           bmrBox.addEventListener('click', () => toggleDefinition(bmrBox, bmrDefinitionPanel, 'bmr'));
-            tdeeBox.addEventListener('click', () => toggleDefinition(tdeeBox, tdeeDefinitionPanel, 'tdee'));
-            imcBox.addEventListener('click', () => toggleDefinition(imcBox, imcDefinitionPanel, 'imc'));
+      const bmrDefinitionPanel = document.getElementById('bmr-definition-panel');
+      const tdeeDefinitionPanel = document.getElementById('tdee-definition-panel');
+      const imcDefinitionPanel = document.getElementById('imc-definition-panel');
+
+      function toggleDefinition(box, panel, type) {
+        [bmrDefinitionPanel, tdeeDefinitionPanel, imcDefinitionPanel].forEach(p => {
+          if (p !== panel) p.style.display = 'none';
         });
 
-        // Fonction pour déterminer la catégorie IMC
-        function getIMCCategory(imc) {
-            const imcBox = document.getElementById('imc-box');
-            let categoryText = "";
-
-            imcBox.classList.remove(
-                'imc-underweight',
-                'imc-normal',
-                'imc-overweight',
-                'imc-obese',
-                'imc-severely-obese',
-                'imc-morbidly-obese'
-            );
-
-            if (imc < 18.5) {
-                categoryText = "Insuffisance pondérale (maigreur)";
-                imcBox.classList.add('imc-underweight');
-            } else if (imc >= 18.5 && imc < 25) {
-                categoryText = "Poids normal";
-                imcBox.classList.add('imc-normal');
-            } else if (imc >= 25 && imc < 30) {
-                categoryText = "Surpoids";
-                imcBox.classList.add('imc-overweight');
-            } else if (imc >= 30 && imc < 35) {
-                categoryText = "Obésité modérée";
-                imcBox.classList.add('imc-obese');
-            } else if (imc >= 35 && imc < 40) {
-                categoryText = "Obésité sévère";
-                imcBox.classList.add('imc-severely-obese');
-            } else {
-                categoryText = "Obésité morbide ou massive";
-                imcBox.classList.add('imc-morbidly-obese');
-            }
-
-            return categoryText;
+        if (panel.style.display === 'block') {
+          panel.style.display = 'none';
+        } else {
+          panel.innerHTML = `<strong>${definitions[type].title}</strong>: ${definitions[type].description}`;
+          panel.style.display = 'block';
         }
-    </script>
+      }
+
+      bmrBox.addEventListener('click', () => toggleDefinition(bmrBox, bmrDefinitionPanel, 'bmr'));
+      tdeeBox.addEventListener('click', () => toggleDefinition(tdeeBox, tdeeDefinitionPanel, 'tdee'));
+      imcBox.addEventListener('click', () => toggleDefinition(imcBox, imcDefinitionPanel, 'imc'));
+    });
+
+    function getIMCCategory(imc) {
+      const imcBox = document.getElementById('imc-box');
+      let categoryText = "";
+
+      imcBox.classList.remove(
+        'imc-underweight',
+        'imc-normal',
+        'imc-overweight',
+        'imc-obese',
+        'imc-severely-obese',
+        'imc-morbidly-obese'
+      );
+
+      if (imc < 18.5) {
+        categoryText = "Insuffisance pondérale (maigreur)";
+        imcBox.classList.add('imc-underweight');
+      } else if (imc >= 18.5 && imc < 25) {
+        categoryText = "Poids normal";
+        imcBox.classList.add('imc-normal');
+      } else if (imc >= 25 && imc < 30) {
+        categoryText = "Surpoids";
+        imcBox.classList.add('imc-overweight');
+      } else if (imc >= 30 && imc < 35) {
+        categoryText = "Obésité modérée";
+        imcBox.classList.add('imc-obese');
+      } else if (imc >= 35 && imc < 40) {
+        categoryText = "Obésité sévère";
+        imcBox.classList.add('imc-severely-obese');
+      } else {
+        categoryText = "Obésité morbide ou massive";
+        imcBox.classList.add('imc-morbidly-obese');
+      }
+
+      return categoryText;
+    }
+  </script>
 </body>
 </html>
 
