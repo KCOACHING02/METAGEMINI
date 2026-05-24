@@ -1,302 +1,1575 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculateur de Métabolisme et Besoins Énergétiques</title>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Calcule Ton Métabolisme — Kcoaching</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+ <style>
+ :root {
+ --orange: #2BAE8E;
+ --orange-d: #229A7C;
+ --orange-bg: rgba(43,174,142,.08);
+ --orange-bg2: rgba(43,174,142,.13);
+ --green: #2ECC71;
+ --green-d: #22A85D;
+ --green-bg: rgba(46,204,113,.10);
+ --anthracite: #1C2B3A;
+ --mid: #2D4A5A;
+ --gold: #F0A500;
+ --gold-bg: rgba(240,165,0,.10);
+ --white: #F4F6F8;
+ --card: #FFFFFF;
+ --border: #EBEBEB;
+ --muted: #999;
+ --sh-sm: 0 2px 10px rgba(0,0,0,.06);
+ --sh-md: 0 4px 22px rgba(0,0,0,.09);
+ --sh-or: 0 8px 32px rgba(43,174,142,.35);
+ --r: 18px;
+ --r-sm: 10px;
+ --fh: 'Nunito', sans-serif;
+ --fb: 'Nunito', sans-serif;
+ }
+ *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+ html {
+ scroll-behavior:smooth;
+ color-scheme: light only;
+ background-color: #F4F6F8 !important;
+ }
+ body {
+ font-family: var(--fb);
+ background-color: #F4F6F8 !important;
+ color: #1C2B3A !important;
+ min-height: 100vh;
+ overflow-x: hidden;
+ -webkit-font-smoothing: antialiased;
+ forced-color-adjust: none;
+ }
+ /* Force each step to have light background */
+ .step { background-color: #F4F6F8 !important; }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+/* STEP SYSTEM */
+.step { display:none; }
+.step.active { display:block; }
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+/* PROGRESS */
+#pgWrap {
+position:fixed; top:0; left:0; right:0;
+height:3px; background:var(–border); z-index:999;
+}
+#pgBar {
+height:100%;
+background:linear-gradient(90deg,var(–orange),var(–gold));
+width:0%; transition:width .6s cubic-bezier(.4,0,.2,1);
+border-radius:0 3px 3px 0;
+}
 
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --primary-green: #28a745;
-            --secondary-orange: #ff7f50; /* Couleur d'action principale */
-            --text-dark: #2c3e50;
-            --text-medium: #555;
-            --text-light: #777;
-            --bg-light: #f4f7f6;
-            --bg-white: #ffffff;
-            --border-light: #eee;
-            --shadow-light: rgba(0,0,0,0.08);
-            --shadow-medium: rgba(0,0,0,0.12);
-            --font-primary: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+/* LAYOUT */
+.wrap { max-width:480px; margin:0 auto; padding:0 20px 56px; }
 
-        body {
-            font-family: var(--font-primary);
-            /* Nouveau : Dégradé de fond subtil */
-            background: linear-gradient(135deg, var(--bg-light) 0%, #e8f0ef 100%);
-            color: var(--text-medium);
-            line-height: 1.6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            background-color: var(--bg-white);
-            padding: 30px 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px var(--shadow-light);
-            max-width: 500px;
-            width: 100%;
-            box-sizing: border-box; /* Assure que le padding n'ajoute pas à la largeur */
-        }
-        h1 {
-            font-family: var(--font-primary);
-            font-weight: 700;
-            letter-spacing: -0.03em; /* Léger resserrement pour un look moderne */
-            color: var(--primary-blue); /* Couleur principale du titre */
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 2.2rem;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text-dark); /* Couleur plus foncée pour les labels */
-            font-size: 0.95em;
-        }
-        input[type="number"], select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-light); /* Bordure légère */
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-            color: var(--text-dark);
-            transition: border-color 0.3s, box-shadow 0.3s; /* Transition douce au focus */
-        }
-        input[type="number"]:focus, select:focus {
-            outline: none;
-            border-color: var(--primary-blue); /* Bordure bleue au focus */
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Ombre légère bleue au focus */
-        }
-        .gender-group {
-            display: flex;
-            gap: 15px;
-        }
-        .gender-group div {
-            flex: 1;
-        }
-        input[type="radio"] {
-            display: none;
-        }
-        .gender-label {
-            display: flex;
-            flex-direction: column; /* Pour empiler icône et texte */
-            align-items: center;
-            justify-content: center;
-            background-color: var(--bg-light); /* Fond clair pour non sélectionné */
-            color: var(--text-medium);
-            padding: 15px; /* Plus de padding pour un look plus rempli */
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-            border: 1px solid var(--border-light); /* Bordure pour les labels radio */
-        }
-        .gender-label:hover {
-            background-color: #e0e4e3; /* Léger changement au survol */
-        }
-        .gender-label .icon {
-            font-size: 2.5em;
-            margin-bottom: 5px; /* Espace entre icône et texte */
-            line-height: 1;
-        }
-        .gender-label .text {
-            font-weight: 600;
-        }
+/* LOGO */
+.logo {
+text-align:center; padding:26px 0 0;
+font-family:var(–fh); font-size:21px;
+letter-spacing:-.5px; color:#1C2B3A;
+}
+.logo b { color:var(–orange); font-weight:800; }
 
-        /* Style pour l'homme sélectionné */
-        input[type="radio"]#homme:checked + .gender-label {
-            background-color: var(--primary-blue); /* Bleu primaire */
-            color: white;
-            font-weight: 700;
-            border-color: var(--primary-blue);
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-        }
+/*
+STEP 0 — HERO
+*/
+.hero-glow-1 {
+position:absolute; top:-80px; right:-80px;
+width:280px; height:280px; border-radius:50%;
+background:radial-gradient(circle,rgba(43,174,142,.14) 0%,transparent 70%);
+pointer-events:none;
+}
+.hero-glow-2 {
+position:absolute; bottom:40px; left:-100px;
+width:220px; height:220px; border-radius:50%;
+background:radial-gradient(circle,rgba(43,174,142,.10) 0%,transparent 70%);
+pointer-events:none;
+}
+.hero-inner { position:relative; padding:32px 0 0; text-align:center; }
 
-        /* Style pour la femme sélectionnée (rose cohérent avec les images féminines) */
-        input[type="radio"]#femme:checked + .gender-label {
-            background-color: #ff69b4; /* Un rose vif et féminin */
-            color: white;
-            font-weight: 700;
-            border-color: #ff69b4;
-            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.2);
-        }
+.badge {
+display:inline-block;
+background:#2BAE8E; color:#fff;
+font-size:12px; font-weight:700;
+padding:7px 18px; border-radius:100px; margin-bottom:20px;
+letter-spacing:.3px;
+}
 
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: var(--secondary-orange); /* Couleur orange pour le bouton d'action */
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-            display: flex; /* Pour aligner l'icône et le texte */
-            align-items: center;
-            justify-content: center;
-            gap: 10px; /* Espace entre icône et texte */
-        }
-        button:hover {
-            background-color: #e66a3d; /* Orange plus foncé au survol */
-            transform: translateY(-2px); /* Léger effet de soulèvement */
-        }
+.h1 {
+font-family:var(–fh);
+font-size:clamp(24px,7vw,34px);
+font-weight:900; line-height:1.15;
+margin-bottom:14px; color:#1C2B3A !important;
+}
+.h1 .or { color:var(–orange); }
+.h1 .ul {
+text-decoration:underline;
+text-decoration-color:var(–gold);
+text-underline-offset:4px;
+}
 
-        /* --- Styles pour l'overlay de chargement --- */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.9); /* Fond blanc semi-transparent */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; /* Assure qu'il est au-dessus de tout */
-            opacity: 0; /* Caché par défaut */
-            visibility: hidden;
-            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out; /* Transition douce */
-        }
+.hero-desc {
+font-size:15px; line-height:1.6; color:#6B7A8D;
+margin-bottom:24px; max-width:320px;
+margin-left:auto; margin-right:auto;
+}
 
-        .loading-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+.cta-sub {
+text-align:center; font-size:12px; color:#9AA5B4;
+margin-top:10px; margin-bottom:16px; letter-spacing:.2px;
+}
 
-        .spinner {
-            border: 8px solid var(--border-light); /* Bordure claire du spinner */
-            border-top: 8px solid var(--primary-blue); /* Partie bleue du spinner */
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite; /* Animation de rotation */
-            margin-bottom: 20px;
-        }
+/* Bouton reprendre — secondaire sobre */
+.btn-reprendre {
+width:100%; border:1.5px solid #2BAE8E;
+background:transparent; color:#2BAE8E;
+border-radius:14px; padding:15px 24px;
+font-family:var(–fb); font-size:16px; font-weight:700;
+cursor:pointer; margin-top:10px;
+transition:all .2s; text-align:center;
+}
+.btn-reprendre:hover { background:rgba(43,174,142,.08); }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+/* Stats strip */
+.strip {
+display:flex; background:var(–anthracite);
+border-radius:var(–r); padding:18px 16px;
+margin-top:28px;
+}
+.strip-item { flex:1; text-align:center; }
+.strip-num {
+font-family:var(–fh); font-size:22px;
+color:var(–orange); font-weight:800;
+}
+.strip-lbl {
+font-size:11px; color:rgba(255,255,255,.55);
+margin-top:3px; line-height:1.3;
+}
+.strip-sep { width:1px; background:rgba(255,255,255,.15); margin:4px 8px; }
 
-        .loading-message {
-            font-size: 1.5em;
-            color: var(--text-dark);
-            font-weight: 600;
-            text-align: center;
-        }
-        /* Fin des styles pour l'overlay */
+.proof {
+text-align:center; margin-bottom:4px;
+font-size:13px; color:#6B7A8D;
+}
+.stars { color:#F0A500; letter-spacing:3px; display:block; margin-bottom:5px; font-size:16px; }
 
-    </style>
+/* CTA BUTTONS */
+.btn {
+display:flex; align-items:center; justify-content:center; gap:8px;
+width:100%; border:none; border-radius:14px;
+padding:18px 24px; font-family:var(–fb);
+font-size:17px; font-weight:700; cursor:pointer;
+transition:all .25s cubic-bezier(.4,0,.2,1);
+letter-spacing:-.2px; position:relative; overflow:hidden;
+text-decoration:none;
+}
+.btn::after {
+content:’’; position:absolute; inset:0;
+background:linear-gradient(135deg,rgba(255,255,255,.14) 0%,transparent 55%);
+}
+.btn-or {
+background:var(–orange); color:#fff;
+box-shadow:var(–sh-or);
+}
+.btn-or:hover {
+background:var(–orange-d);
+transform:translateY(-2px);
+box-shadow:0 12px 40px rgba(43,174,142,.45);
+}
+.btn-or:active { transform:translateY(0); }
+
+.btn-gold {
+background:linear-gradient(135deg,var(–gold) 0%,#e09600 100%);
+color:#fff;
+box-shadow:0 8px 32px rgba(240,165,0,.35);
+}
+.btn-gold:hover {
+transform:translateY(-2px);
+box-shadow:0 12px 40px rgba(240,165,0,.5);
+}
+
+@keyframes pulse-or {
+0%,100% { box-shadow:0 8px 32px rgba(43,174,142,.35); }
+50% { box-shadow:0 8px 40px rgba(43,174,142,.55),0 0 0 8px rgba(43,174,142,.08); }
+}
+.btn-pulse { animation:pulse-or 2.6s ease-in-out infinite; }
+
+/*
+STEP 1 — FORM
+*/
+.form-top { padding:28px 0 0; }
+.tag {
+text-align:center; font-size:11.5px; font-weight:700;
+color:var(–orange); text-transform:uppercase;
+letter-spacing:1.6px; margin-bottom:10px;
+}
+.sh {
+font-family:var(–fh); font-size:26px; font-weight:800;
+text-align:center; line-height:1.15; margin-bottom:8px;
+}
+.ss {
+text-align:center; color:#777; font-size:14px;
+line-height:1.6; margin-bottom:30px;
+}
+
+.fg { margin-bottom:20px; }
+.fl {
+display:block; font-size:13px; font-weight:600;
+color:var(–mid); margin-bottom:8px; letter-spacing:.2px;
+}
+.fi-wrap { position:relative; }
+.fi {
+width:100%; padding:15px 16px;
+border:1.5px solid var(–border);
+border-radius:var(–r-sm);
+font-family:var(–fb); font-size:16px;
+color:var(–anthracite); background:#fff;
+transition:border-color .2s, box-shadow .2s;
+outline:none; appearance:none; -webkit-appearance:none;
+}
+.fi:focus {
+border-color:var(–orange);
+box-shadow:0 0 0 3px rgba(43,174,142,.12);
+}
+.fi-unit {
+position:absolute; right:14px; top:50%;
+transform:translateY(-50%);
+font-size:13px; font-weight:600;
+color:#bbb; pointer-events:none;
+}
+
+/* Gender toggle */
+.gender-row { display:flex; gap:10px; }
+.gbtn {
+flex:1; padding:14px 10px;
+border:1.5px solid var(–border);
+border-radius:var(–r-sm); background:#fff;
+cursor:pointer; font-family:var(–fb);
+font-size:15px; font-weight:600;
+text-align:center; transition:all .2s; color:#888;
+}
+.gbtn.on {
+border-color:var(–orange);
+background:var(–orange-bg); color:var(–orange);
+}
+
+/* Activity options */
+.act-list { display:flex; flex-direction:column; gap:8px; }
+.act-item {
+display:flex; align-items:center; gap:14px;
+padding:13px 16px;
+border:1.5px solid var(–border);
+border-radius:var(–r-sm); background:#fff;
+cursor:pointer; transition:all .2s;
+}
+.act-item.on {
+border-color:var(–orange); background:var(–orange-bg);
+}
+.act-ico { font-size:22px; flex-shrink:0; width:28px; text-align:center; }
+.act-txt strong { display:block; font-size:14px; font-weight:600; color:var(–anthracite); }
+.act-txt small { font-size:12px; color:#aaa; }
+
+.err { color:#e74c3c; font-size:12.5px; margin-bottom:12px; display:none; }
+
+/*
+STEP 2 — LOADING
+*/
+.load-center {
+display:flex; flex-direction:column; align-items:center;
+justify-content:center; min-height:100vh;
+padding:40px 20px; text-align:center;
+}
+.spinner {
+width:62px; height:62px;
+border:3px solid var(–border);
+border-top-color:var(–orange);
+border-radius:50%;
+animation:spin .9s linear infinite;
+margin-bottom:26px;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.load-h { font-family:var(–fh); font-size:20px; margin-bottom:6px; }
+.load-s { font-size:14px; color:#aaa; margin-bottom:34px; }
+
+.chklist { width:100%; max-width:340px; text-align:left; }
+.chk-row {
+display:flex; align-items:center; gap:12px;
+padding:11px 0; border-bottom:1px solid var(–border);
+opacity:.22; transition:opacity .4s;
+font-size:14px; color:var(–mid);
+}
+.chk-row:last-child { border-bottom:none; }
+.chk-row.done { opacity:1; }
+.chkdot {
+width:22px; height:22px; border-radius:50%;
+background:var(–green); color:#fff;
+font-size:11px; font-weight:700;
+display:flex; align-items:center; justify-content:center;
+flex-shrink:0;
+}
+
+/*
+STEP 3 — RESULTS
+*/
+.res-top { text-align:center; padding:20px 0 18px; }
+.res-h {
+font-family:var(–fh); font-size:24px;
+font-weight:800; margin-bottom:6px; color:#1C2B3A !important;
+}
+.res-s { font-size:14px; color:#6B7A8D; }
+
+/* Metric grid */
+.mgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.mcard {
+background:#fff; border:1px solid var(–border);
+border-radius:var(–r); padding:16px; box-shadow:var(–sh-sm);
+}
+.mcard.hl {
+background:linear-gradient(135deg,#2BAE8E 0%,#3ECBA8 100%);
+border:none;
+}
+.mcard.hl .ml { color:rgba(255,255,255,.7); }
+.mcard.hl .mv { color:#fff; }
+.mcard.hl .mu { color:rgba(255,255,255,.65); }
+.ml {
+font-size:10.5px; font-weight:700; text-transform:uppercase;
+letter-spacing:.8px; color:#bbb; margin-bottom:6px;
+}
+.mv {
+font-family:var(–fh); font-size:30px;
+font-weight:800; line-height:1; margin-bottom:3px;
+}
+.mu { font-size:12px; color:#bbb; }
+
+/* BMI card */
+.bmi-card {
+background:#fff; border:1px solid var(–border);
+border-radius:var(–r); padding:18px;
+box-shadow:var(–sh-sm); margin-bottom:14px;
+}
+.bmi-title {
+font-size:10.5px; font-weight:700; text-transform:uppercase;
+letter-spacing:.8px; color:#bbb; margin-bottom:14px;
+}
+.bbar-wrap { position:relative; margin-bottom:6px; }
+.bbar {
+height:10px; border-radius:100px;
+background:linear-gradient(90deg,
+#74B9FF 0% 20%, #2ECC71 20% 40%,
+#FFA502 40% 65%, #FF4757 65% 100%);
+}
+.bdot {
+position:absolute; top:50%; left:0%;
+transform:translate(-50%,-50%);
+width:18px; height:18px; background:#fff;
+border:3px solid var(–anthracite); border-radius:50%;
+transition:left 1s cubic-bezier(.4,0,.2,1);
+box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.blabels {
+display:flex; justify-content:space-between;
+font-size:10px; color:#ccc; margin-top:8px;
+}
+.bmi-center {
+text-align:center; margin-top:14px; padding-top:14px;
+border-top:1px solid var(–border);
+}
+.bnum {
+font-family:var(–fh); font-size:36px;
+font-weight:800; color:var(–orange);
+}
+.bcat { font-size:13px; color:#888; margin-top:3px; }
+
+/* Pain card */
+.pain-card {
+background:#FFFBF0; border:1px solid rgba(240,165,0,.3);
+border-radius:var(–r); padding:18px; margin-bottom:14px;
+}
+.pain-title {
+font-size:14px; font-weight:700; margin-bottom:10px;
+}
+.pain-txt { font-size:14px; line-height:1.65; color:#555; }
+.pain-txt strong { color:var(–orange-d); }
+
+/*
+STEP 4 — PROGRAMS
+*/
+.prog-top { text-align:center; padding:28px 0 22px; }
+.prog-h {
+font-family:var(–fh); font-size:24px;
+font-weight:800; margin-bottom:6px;
+}
+.prog-s { font-size:14px; color:#999; line-height:1.5; }
+
+.pcard {
+background:#fff; border:1.5px solid var(–border);
+border-radius:var(–r); padding:20px;
+margin-bottom:14px; cursor:pointer;
+transition:all .25s; position:relative;
+box-shadow:var(–sh-sm); overflow:visible;
+}
+.pcard:hover {
+border-color:var(–orange);
+box-shadow:0 6px 28px rgba(43,174,142,.12);
+transform:translateY(-2px);
+}
+.pcard.star {
+border-color:var(–gold);
+background:linear-gradient(160deg,#FFFDF5 0%,#FFF8E0 100%);
+box-shadow:0 4px 24px rgba(240,165,0,.15);
+}
+.pcard.star:hover {
+border-color:var(–gold);
+box-shadow:0 10px 40px rgba(240,165,0,.25);
+}
+
+.star-tag {
+position:absolute; top:-13px; left:50%;
+transform:translateX(-50%);
+background:linear-gradient(135deg,var(–gold),#e09600);
+color:#fff; font-size:11px; font-weight:700;
+padding:4px 14px; border-radius:100px;
+white-space:nowrap; text-transform:uppercase;
+letter-spacing:.5px;
+box-shadow:0 2px 12px rgba(240,165,0,.4);
+}
+
+.ptop-row {
+display:flex; justify-content:space-between;
+align-items:flex-start; margin-bottom:14px;
+}
+.pname {
+font-family:var(–fh); font-size:16px;
+font-weight:800; margin-bottom:3px;
+}
+.pdur { font-size:12px; color:#aaa; }
+.pcol { text-align:right; }
+.pprice {
+font-family:var(–fh); font-size:22px;
+font-weight:800; color:var(–orange);
+}
+.pday { font-size:11px; color:#ccc; }
+
+/* Phases row (7 weeks) */
+.phases { display:flex; gap:6px; margin-bottom:14px; }
+.phase-chip {
+flex:1; background:#fff; border:1px solid var(–border);
+border-radius:8px; padding:8px 4px; text-align:center;
+}
+.pw { font-size:9px; color:#aaa; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px; }
+.pc { font-size:13px; font-weight:700; color:var(–anthracite); }
+
+/* Loss block */
+.lblock {
+background:var(–green-bg); border-radius:var(–r-sm);
+padding:12px 14px; margin-bottom:14px;
+}
+.lrow {
+display:flex; justify-content:space-between; align-items:center;
+}
+.lrow + .lrow { margin-top:8px; }
+.llabel { font-size:12px; color:#555; }
+.lval { font-weight:700; color:var(–green-d); font-size:15px; }
+.lval.big { font-family:var(–fh); font-size:21px; }
+.lval.hl { color:var(–orange); font-size:18px; }
+
+/* Program button */
+.pbtn {
+width:100%; padding:13px 16px; border:none;
+border-radius:var(–r-sm); font-family:var(–fb);
+font-size:14px; font-weight:700; cursor:pointer;
+transition:all .2s; background:#2BAE8E;
+color:#fff; text-align:center;
+}
+.pcard.star .pbtn {
+background:linear-gradient(135deg,var(–gold) 0%,var(–orange) 100%);
+font-size:15px; padding:15px;
+}
+.pbtn:hover { opacity:.9; transform:translateY(-1px); }
+
+/* Value stack */
+.vstack {
+background:#E8FAF5; border:1px solid rgba(43,174,142,.25);
+border-radius:var(–r); padding:20px; margin-bottom:20px;
+}
+.vstack-t { font-size:15px; font-weight:700; margin-bottom:14px; color:#1C2B3A; }
+.vpt {
+display:flex; gap:10px; align-items:flex-start;
+margin-bottom:10px; font-size:14px; line-height:1.5;
+}
+.vck { color:var(–green); font-weight:900; font-size:16px; flex-shrink:0; margin-top:1px; }
+.vpt strong { color:var(–anthracite); }
+
+/* Cartes secondaires compactes */
+.pcard.sec { padding:14px; margin-bottom:10px; }
+.pcard.sec .pname { font-size:14px; }
+.pcard.sec .pdur { font-size:11px; }
+.pcard.sec .pprice { font-size:18px; }
+.pcard.sec .pday { font-size:10px; }
+.pcard.sec .tw-block { padding:10px 12px; margin-bottom:10px; }
+.pcard.sec .tw-weight { font-size:26px; }
+.pcard.sec .tw-label { font-size:10px; }
+.pcard.sec .tw-unit { font-size:11px; }
+.pcard.sec .tw-3m { font-size:10px; margin-top:6px; padding-top:6px; }
+.pcard.sec .pbtn { padding:11px 14px; font-size:13px; }
+
+/* Ancrage valeur sur best-seller */
+.value-anchor {
+text-align:center; font-size:11px; color:#9AA5B4;
+margin-top:8px; letter-spacing:.2px;
+}
+/* Divider */
+.div {
+text-align:center; position:relative;
+margin:22px 0; font-size:12px; color:#ccc;
+}
+.div::before,.div::after {
+content:’’; position:absolute; top:50%;
+height:1px; background:var(–border); width:36%;
+}
+.div::before { left:0; }
+.div::after { right:0; }
+
+/* Guarantee strip */
+.guar {
+display:flex; align-items:center; gap:8px;
+background:rgba(255,255,255,.55); border-radius:8px;
+padding:10px 12px; margin-top:10px;
+font-size:12px; color:#666;
+}
+
+/* Footer */
+.footer {
+text-align:center; padding:24px 0;
+font-size:11px; color:#ccc; line-height:1.8;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+from { opacity:0; transform:translateY(16px); }
+to { opacity:1; transform:translateY(0); }
+}
+.fu { animation:fadeUp .5s ease forwards; }
+.d1 { animation-delay:.1s; opacity:0; }
+.d2 { animation-delay:.2s; opacity:0; }
+.d3 { animation-delay:.3s; opacity:0; }
+.d4 { animation-delay:.4s; opacity:0; }
+.d5 { animation-delay:.5s; opacity:0; }
+.d6 { animation-delay:.6s; opacity:0; }
+
+/* VISION CARD (merged with journey) */
+.vision-card {
+background:linear-gradient(135deg,#F0FFF7 0%,#E6FFF2 100%);
+border:1.5px solid rgba(46,204,113,.3);
+border-radius:var(–r); padding:20px 18px;
+text-align:center; margin-bottom:12px;
+box-shadow:0 4px 20px rgba(46,204,113,.1);
+}
+.vision-label { font-size:13px; color:#666; margin-bottom:6px; }
+.vision-weight {
+font-family:var(–fh); font-size:72px; font-weight:800;
+color:var(–green-d); line-height:1;
+display:inline; margin-right:6px;
+}
+.vision-unit { font-size:20px; font-weight:700; color:var(–green-d); }
+.vision-sub {
+display:inline-block; font-size:12px; color:#555;
+background:rgba(46,204,113,.12); padding:5px 14px;
+border-radius:100px; margin-top:10px; margin-bottom:16px;
+}
+
+/* Journey integrated inside vision card */
+.vision-journey {
+display:flex; align-items:center; gap:10px;
+background:rgba(255,255,255,.65); border-radius:var(–r-sm);
+padding:12px 14px;
+}
+.vj-side { text-align:center; flex-shrink:0; }
+.vj-w {
+font-family:var(–fh); font-size:16px; font-weight:800;
+color:var(–anthracite); display:block;
+}
+.vj-w.gr { color:var(–green-d); }
+.vj-lbl { font-size:10px; color:#aaa; }
+.vj-bar { flex:1; }
+.vj-track {
+height:5px; background:rgba(0,0,0,.08); border-radius:100px;
+overflow:hidden; margin-bottom:5px;
+}
+.vj-fill {
+height:100%; width:0%;
+background:linear-gradient(90deg,var(–orange),var(–green));
+border-radius:100px;
+transition:width 1.2s cubic-bezier(.4,0,.2,1);
+}
+.vj-txt { font-size:10px; color:#bbb; text-align:center; }
+
+/* INFO ROW (inline, not cards) */
+.info-row {
+display:flex; gap:0;
+background:#fff; border:1px solid var(–border);
+border-radius:var(–r); overflow:hidden;
+margin-bottom:12px; box-shadow:var(–sh-sm);
+}
+.info-cell {
+flex:1; padding:14px 10px; text-align:center;
+}
+.info-cell + .info-cell {
+border-left:1px solid var(–border);
+}
+.info-ico { font-size:18px; margin-bottom:4px; }
+.info-val {
+font-family:var(–fh); font-size:18px; font-weight:800;
+color:var(–anthracite); display:block; margin-bottom:3px;
+}
+.info-lbl { font-size:10px; color:#aaa; line-height:1.3; }
+
+/* EMPATHY CARD */
+.empathy-card {
+background:#F0FBF8; border:1px solid rgba(43,174,142,.2);
+border-radius:var(–r); padding:16px; margin-bottom:12px;
+}
+.empathy-title { font-size:14px; font-weight:700; margin-bottom:8px; }
+.empathy-txt { font-size:13.5px; line-height:1.6; color:#555; }
+.empathy-txt strong { color:var(–orange-d); }
+
+/* PROGRAM TARGET BLOCK */
+.tw-block {
+border-radius:var(–r-sm); padding:14px;
+margin-bottom:12px; text-align:center;
+background:var(–green-bg);
+}
+.tw-label { font-size:11px; color:#555; margin-bottom:4px; }
+.tw-weight {
+font-family:var(–fh); font-size:34px; font-weight:800;
+color:var(–green-d); line-height:1;
+}
+.tw-unit { font-size:13px; font-weight:700; color:var(–green-d); }
+.tw-3m {
+margin-top:8px; padding-top:8px;
+border-top:1px solid rgba(46,204,113,.2);
+font-size:11px; color:#555;
+}
+.tw-3m strong { color:var(–green-d); font-size:14px; }
+
+/* POIDS DE FORME — cartes proéminentes */
+.metrics-duo {
+display:grid; grid-template-columns:1fr 1fr;
+gap:10px; margin-bottom:12px;
+}
+.metric-solo {
+background:#fff;
+border:1.5px solid var(–border);
+border-radius:var(–r);
+padding:18px 12px;
+text-align:center;
+box-shadow:var(–sh-sm);
+}
+.metric-solo.accent {
+background:linear-gradient(135deg,#2BAE8E 0%,#3ECBA8 100%);
+border:none;
+box-shadow:0 4px 20px rgba(43,174,142,.25);
+}
+.ms-label {
+font-size:10px; font-weight:700;
+text-transform:uppercase; letter-spacing:.7px;
+color:#9AA5B4; margin-bottom:8px; display:block;
+line-height:1.3;
+}
+.metric-solo.accent .ms-label { color:rgba(255,255,255,.75); }
+.ms-val {
+font-family:var(–fh); font-size:42px; font-weight:900;
+color:#1C2B3A; line-height:1; display:block;
+}
+.metric-solo.accent .ms-val { color:#fff; }
+.ms-unit {
+font-size:13px; font-weight:600;
+color:#9AA5B4; margin-top:4px; display:block;
+}
+.metric-solo.accent .ms-unit { color:rgba(255,255,255,.75); }
+
+/* RING COMPONENT (Yazio exact) */
+.ring-section {
+display:flex; align-items:center;
+background:#fff; border:1px solid var(–border);
+border-radius:var(–r); padding:24px 12px 20px;
+margin-bottom:12px; box-shadow:var(–sh-sm);
+}
+.ring-side { flex:1; text-align:center; padding:0 4px; }
+.ring-side-val {
+font-family:var(–fh); font-size:24px; font-weight:800;
+color:#1C2B3A; line-height:1; display:block; margin-bottom:5px;
+}
+.ring-side-val.or { color:var(–orange); }
+.ring-side-lbl { font-size:11px; color:#9AA5B4; line-height:1.4; display:block; }
+
+.ring-center { position:relative; width:154px; flex-shrink:0; }
+.ring-svg { width:154px; height:154px; display:block; transform:rotate(135deg); }
+.ring-track {
+fill:none; stroke:#EFF1F3; stroke-width:11;
+stroke-dasharray: 270 90; stroke-linecap:round;
+}
+.ring-fill {
+fill:none; stroke:#2BAE8E; stroke-width:11; stroke-linecap:round;
+stroke-dasharray: 0 360;
+transition:stroke-dasharray 1.6s cubic-bezier(.4,0,.2,1);
+}
+.ring-inner {
+position:absolute; top:46%; left:50%;
+transform:translate(-50%,-50%); text-align:center; width:108px;
+}
+.ring-val {
+font-family:var(–fh); font-size:clamp(15px,4.8vw,21px); font-weight:900;
+color:#1C2B3A; line-height:1; display:block; margin-bottom:3px;
+white-space:nowrap; letter-spacing:-0.5px;
+}
+.ring-lbl { font-size:9.5px; color:#9AA5B4; line-height:1.3; display:block; }
+
+/* PROGRESS BARS (Yazio exact) */
+.pbar-section {
+background:#fff; border:1px solid var(–border);
+border-radius:var(–r); padding:16px 16px 14px;
+margin-bottom:12px; box-shadow:var(–sh-sm);
+}
+.pbar-item { margin-bottom:14px; }
+.pbar-item:last-child { margin-bottom:0; }
+.pbar-header {
+display:flex; justify-content:space-between; align-items:baseline;
+margin-bottom:8px;
+}
+.pbar-label { font-size:13px; font-weight:600; color:#1C2B3A; }
+.pbar-value { font-size:13px; font-weight:700; color:#2BAE8E; }
+.pbar-track {
+height:8px; background:#EFF1F3;
+border-radius:100px; overflow:hidden;
+}
+.pbar-fill {
+height:100%; border-radius:100px; background:#2BAE8E; width:0%;
+transition:width 1.3s cubic-bezier(.4,0,.2,1);
+}
+.pbar-fill.imc {
+background:linear-gradient(90deg,#74B9FF 0%,#2BAE8E 30%,#FFA502 65%,#FF4757 100%);
+}
+.pbar-sublabels {
+display:flex; justify-content:space-between;
+font-size:9.5px; color:#C5CAD3; margin-top:5px;
+}
+
+@media (max-width:360px) {
+.h1 { font-size:25px; }
+.vision-weight { font-size:60px; }
+.ring-center { width:110px; }
+.ring-svg { width:110px; height:110px; }
+}
+</style>
+
 </head>
 <body>
 
-    <div class="container">
-        <h1>Calculez Votre Métabolisme ⚡</h1>
-        <form id="metabolism-form">
-            <div class="form-group">
-                <label>Sexe</label>
-                <div class="gender-group">
-                    <div>
-                        <input type="radio" id="homme" name="gender" value="male" checked>
-                        <label for="homme" class="gender-label">
-                            <span class="icon"><i class="fas fa-male"></i></span>
-                            <span class="text">Homme</span>
-                        </label>
-                    </div>
-                    <div>
-                        <input type="radio" id="femme" name="gender" value="female">
-                        <label for="femme" class="gender-label">
-                            <span class="icon"><i class="fas fa-female"></i></span>
-                            <span class="text">Femme</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="age">Âge (années)</label>
-                <input type="number" id="age" required>
-            </div>
-            <div class="form-group">
-                <label for="weight">Poids (kg)</label>
-                <input type="number" id="weight" required>
-            </div>
-            <div class="form-group">
-                <label for="height">Taille (cm)</label>
-                <input type="number" id="height" required>
-            </div>
-            <div class="form-group">
-                <label for="activity">Niveau d'activité physique</label>
-                <select id="activity">
-                    <option value="1.2">Sédentaire (<5000 pas/jour) 🛋️</option>
-                    <option value="1.375">Faiblement actif(ve) (5000-7499 pas/jour) 🚶</option>
-                    <option value="1.55">Modérément actif(ve) (10000-12499 pas/jour) 🏃‍♀️</option>
-                    <option value="1.725">Actif(ve) (> 12500 pas/jour) 🏋️‍♂️</option>
-                    <option value="1.9">Très actif(ve) (Travail physique intense / sportif pro) 🤸</option>
-                </select>
-            </div>
-            <button type="submit"><i class="fas fa-calculator"></i> Calculer mes besoins</button>
-        </form>
+<!-- PROGRESS -->
+
+<div id="pgWrap"><div id="pgBar"></div></div>
+
+<!-- 
+ STEP 0 — HERO 
+ -->
+
+<div class="step active" id="s0">
+ <div style="position:relative;overflow:hidden;">
+ <div class="hero-glow-1"></div>
+ <div class="hero-glow-2"></div>
+ <div class="wrap">
+ <div class="logo">K<b>coaching</b></div>
+
+ <div class="hero-inner fu">
+
+  <!-- Badge — fond solide, contraste net -->
+
+  <div class="badge">Calcul personnalisé · 100% gratuit</div>
+
+  <!-- Titre — 2 lignes maximum -->
+
+  <h1 class="h1">
+    Combien de kilos<br>
+    peux-tu <span class="ul">vraiment</span> perdre ?
+  </h1>
+
+  <!-- Description — 1 ligne, sans friction -->
+
+  <p class="hero-desc">
+    Ton métabolisme calculé en 2 minutes. Le programme fait pour toi.
+  </p>
+
+  <!-- CTA + sous-texte de réassurance -->
+
+  <button class="btn btn-or btn-pulse" onclick="go(1)">
+    Calculer mon métabolisme
+  </button>
+
+  <!-- Bouton "Reprendre" — visible uniquement si données sauvegardées -->
+
+  <button class="btn btn-reprendre" id="btnReprendre" onclick="resumeAnalysis()" style="display:none">
+    Reprendre mon analyse →
+  </button>
+
+  <div class="cta-sub">Gratuit · 2 minutes · Sans inscription</div>
+
+  <!-- Preuve sociale renforcée -->
+
+  <div class="proof">
+    <span class="stars">★★★★★</span>
+    Plus de 500 clientes ont perdu en moyenne 7 kg
+  </div>
+
+  <!-- Strip stats -->
+
+  <div class="strip">
+    <div class="strip-item">
+      <div class="strip-num">-7 kg</div>
+      <div class="strip-lbl">en moyenne</div>
     </div>
-
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner"></div>
-        <p class="loading-message">Calcul en cours...</p>
+    <div class="strip-sep"></div>
+    <div class="strip-item">
+      <div class="strip-num">7 sem.</div>
+      <div class="strip-lbl">challenge star</div>
     </div>
+    <div class="strip-sep"></div>
+    <div class="strip-item">
+      <div class="strip-num">100%</div>
+      <div class="strip-lbl">nutrition</div>
+    </div>
+  </div>
+ </div>
+ </div>
+ </div>
+</div>
 
-    <script>
-        document.getElementById('metabolism-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+<!-- 
+ STEP 1 — FORM 
+ -->
 
-            const gender = document.querySelector('input[name="gender"]:checked').value;
-            const age = parseInt(document.getElementById('age').value);
-            const weight = parseFloat(document.getElementById('weight').value);
-            const height = parseFloat(document.getElementById('height').value);
-            const activityFactor = parseFloat(document.getElementById('activity').value);
+<div class="step" id="s1">
+ <div class="wrap">
+ <div class="logo">K<b>coaching</b></div>
 
-            if (isNaN(age) || isNaN(weight) || isNaN(height)) {
-                alert("Veuillez remplir tous les champs correctement.");
-                return;
-            }
+ <div class="form-top">
+ <div class="tag">Étape 1 — Ton profil</div>
+ <h2 class="sh">Quelques infos sur toi</h2>
+ <p class="ss">Pour calculer ton métabolisme réel, unique comme toi.</p>
+ </div>
 
-            // Affiche l'overlay de chargement
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.classList.add('active');
+ <!-- Prénom -->
 
-            let bmr;
-            // Mifflin-St Jeor Equation
-            if (gender === 'male') {
-                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
-            } else {
-                bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
-            }
+ <div class="fg">
+ <label class="fl"> Ton prénom <span style="color:#bbb;font-weight:400">(optionnel)</span></label>
+ <input id="prenom" type="text" class="fi" placeholder="Ex : Sophie">
+ </div>
 
-            const tdee = bmr * activityFactor;
+ <!-- Genre -->
 
-            // Simule un temps de calcul avec un délai de 1.5 secondes
-            // Cela donne le temps à l'utilisateur de voir l'animation de chargement
-            setTimeout(() => {
-                window.location.href = `resultats.html?bmr=${bmr.toFixed(0)}&tdee=${tdee.toFixed(0)}&weight=${weight}&height=${height}`;
-            }, 1500); // Délai de 1.5 secondes
-        });
-    </script>
+ <div class="fg">
+ <label class="fl"> Je suis…</label>
+ <div class="gender-row">
+ <button class="gbtn on" id="gf" onclick="setG('f')"> Femme</button>
+ <button class="gbtn" id="gh" onclick="setG('h')"> Homme</button>
+ </div>
+ </div>
+
+ <!-- Âge -->
+
+ <div class="fg">
+ <label class="fl"> Âge</label>
+ <div class="fi-wrap">
+ <input id="age" type="number" class="fi" placeholder="Ex : 35"
+ min="18" max="70" style="padding-right:52px">
+ <span class="fi-unit">ans</span>
+ </div>
+ </div>
+
+ <!-- Poids -->
+
+ <div class="fg">
+ <label class="fl"> Poids actuel</label>
+ <div class="fi-wrap">
+ <input id="poids" type="number" class="fi" placeholder="Ex : 78"
+ min="40" max="200" step="0.1" style="padding-right:44px">
+ <span class="fi-unit">kg</span>
+ </div>
+ </div>
+
+ <!-- Taille -->
+
+ <div class="fg">
+ <label class="fl"> Taille</label>
+ <div class="fi-wrap">
+ <input id="taille" type="number" class="fi" placeholder="Ex : 165"
+ min="140" max="220" style="padding-right:44px">
+ <span class="fi-unit">cm</span>
+ </div>
+ </div>
+
+ <!-- Activité -->
+
+ <div class="fg">
+ <label class="fl"> Mon niveau d'activité au quotidien</label>
+ <div class="act-list">
+ <div class="act-item on" id="a0" onclick="setA(0,1.2)">
+  <div class="act-txt">
+ <strong>Sédentaire</strong>
+ <small>Bureau, peu de mouvement</small>
+ </div>
+ </div>
+ <div class="act-item" id="a1" onclick="setA(1,1.375)">
+  <div class="act-txt">
+ <strong>Légèrement actif</strong>
+ <small>Marche quotidienne</small>
+ </div>
+ </div>
+ <div class="act-item" id="a2" onclick="setA(2,1.55)">
+  <div class="act-txt">
+ <strong>Modérément actif</strong>
+ <small>Sport 2-3× par semaine</small>
+ </div>
+ </div>
+ <div class="act-item" id="a3" onclick="setA(3,1.725)">
+  <div class="act-txt">
+ <strong>Très actif</strong>
+ <small>Sport intensif 4-5× par semaine</small>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ <div class="err" id="ferr"></div>
+
+ <button class="btn btn-or" onclick="submit()">
+ Analyser mon métabolisme →
+ </button>
+ </div>
+</div>
+
+<!-- 
+ STEP 2 — LOADING 
+ -->
+
+<div class="step" id="s2">
+ <div class="load-center">
+ <div class="spinner"></div>
+ <div class="load-h" id="ltitle">Analyse en cours…</div>
+ <div class="load-s">Calcul de ton profil unique</div>
+
+ <div class="chklist">
+ <div class="chk-row" id="c1">
+ <div class="chkdot"></div>
+ <span>Calcul du métabolisme de base (BMR)</span>
+ </div>
+ <div class="chk-row" id="c2">
+ <div class="chkdot"></div>
+ <span>Analyse de ta dépense énergétique totale</span>
+ </div>
+ <div class="chk-row" id="c3">
+ <div class="chkdot"></div>
+ <span>Détermination de ton poids de forme</span>
+ </div>
+ <div class="chk-row" id="c4">
+ <div class="chkdot"></div>
+ <span>Estimation personnalisée par programme</span>
+ </div>
+ </div>
+ </div>
+</div>
+
+<!-- 
+ STEP 3 — RÉSULTATS 
+ -->
+
+<div class="step" id="s3">
+ <div class="wrap">
+ <div class="logo">K<b>coaching</b></div>
+
+ <div class="res-top fu d1">
+ <div class="tag">Ton analyse personnalisée · <span onclick="go(1)" style="color:var(--orange);cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Modifier</span></div>
+ <h2 class="res-h" id="resH">Voici tes données </h2>
+ </div>
+
+ <!-- Vision card compact -->
+
+ <div class="vision-card fu d2">
+ <div class="vision-label">Dans 3 mois, tu pourrais peser</div>
+ <div>
+ <span class="vision-weight" id="visionW">—</span>
+ <span class="vision-unit">kg</span>
+ </div>
+ <div class="vision-sub" id="visionSub">soit X kg de moins</div>
+ <div class="vision-journey">
+ <div class="vj-side">
+ <span class="vj-w" id="vjNow">—</span>
+ <span class="vj-lbl">Aujourd'hui</span>
+ </div>
+ <div class="vj-bar">
+ <div class="vj-track"><div class="vj-fill" id="vjFill"></div></div>
+ <div class="vj-txt">ta transformation</div>
+ </div>
+ <div class="vj-side">
+ <span class="vj-w gr" id="vjGoal">—</span>
+ <span class="vj-lbl">Objectif</span>
+ </div>
+ </div>
+ </div>
+
+ <!-- Ring Yazio-style : BMR | TDEE donut | Objectif -->
+
+ <div class="ring-section fu d3">
+ <div class="ring-side">
+ <span class="ring-side-val" id="mBmr">—</span>
+ <span class="ring-side-lbl">Métabolisme<br>au repos (cal)</span>
+ </div>
+ <div class="ring-center">
+ <svg class="ring-svg" viewBox="0 0 140 140">
+ <circle class="ring-track" cx="70" cy="70" r="57"/>
+ <circle class="ring-fill" id="ringArc" cx="70" cy="70" r="57"/>
+ </svg>
+ <div class="ring-inner">
+ <span class="ring-val" id="mTdee">—</span>
+ <span class="ring-lbl">cal / jour<br>en activité</span>
+ </div>
+ </div>
+ <div class="ring-side">
+ <span class="ring-side-val" id="mImc">—</span>
+ <span class="ring-side-lbl">Indice de<br>masse corp.</span>
+ </div>
+ </div>
+
+ <!-- Poids de forme + Objectif — cartes solo -->
+
+ <div class="metrics-duo fu d4">
+ <div class="metric-solo">
+ <div class="ms-label">Poids de forme conseillé</div>
+ <div class="ms-val" id="msIdeal">—</div>
+ <div class="ms-unit">kg</div>
+ </div>
+ <div class="metric-solo accent">
+ <div class="ms-label">À perdre pour y arriver</div>
+ <div class="ms-val" id="msGoal">—</div>
+ <div class="ms-unit">kg</div>
+ </div>
+ </div>
+
+ <!-- Empathy -->
+
+ <div class="empathy-card fu d5" style="animation-delay:.4s;opacity:0">
+ <div class="empathy-title">Ce n'est pas ta faute si tu stagnes</div>
+ <p class="empathy-txt" id="empathyTxt">…</p>
+ </div>
+
+ <div class="fu d6">
+ <button class="btn btn-or" onclick="go(4)">
+ Voir mon programme personnalisé →
+ </button>
+ </div>
+ </div>
+</div>
+
+<!-- 
+ STEP 4 — PROGRAMMES 
+ -->
+
+<div class="step" id="s4">
+ <div class="wrap">
+ <div class="logo">K<b>coaching</b></div>
+
+ <div class="prog-top fu d1">
+ <div class="tag">Ta feuille de route</div>
+ <h2 class="prog-h" id="progH">Choisis ton rythme</h2>
+ <p class="prog-s" id="progS">Estimations basées sur ton profil personnel</p>
+ </div>
+
+ <!-- 7 SEMAINES — BEST SELLER -->
+
+ <div class="pcard star fu d2" onclick="goB('7sem')">
+ <div class="star-tag">BEST-SELLER — Le plus complet</div>
+ <br>
+ <div class="ptop-row">
+ <div>
+ <div class="pname">7 semaines pour transformer ton corps</div>
+ <div class="pdur">49 jours · Progressif · Résultats qui durent</div>
+ </div>
+ <div class="pcol">
+ <div class="pprice">29,99€</div>
+ <div class="pday">0,61€ / jour</div>
+ </div>
+ </div>
+
+ <div class="tw-block">
+ <div class="tw-label">Dans 7 semaines, tu pourrais peser</div>
+ <div><span class="tw-weight" id="tw7w">—</span><span class="tw-unit">kg</span></div>
+
+ </div>
+
+<button class="pbtn" id="cta7w" onclick="goB('7sem'); event.stopPropagation()">Je commence — 29,99€</button>
+
+ <div class="guar">
+ <span>Menus équilibrés · Sans privation · Résultats durables</span>
+ </div>
+ <div class="value-anchor">Le programme le plus complet · Seulement 0,61€/jour</div>
+ </div>
+
+ <!-- 4 SEMAINES -->
+
+ <div class="pcard sec fu d3" onclick="goB('4sem')">
+ <div class="ptop-row">
+ <div>
+ <div class="pname">Challenge 4 semaines</div>
+ <div class="pdur">28 jours · Résultats visibles</div>
+ </div>
+ <div class="pcol">
+ <div class="pprice">19,99€</div>
+ <div class="pday">0,71€ / jour</div>
+ </div>
+ </div>
+ <div class="tw-block">
+ <div class="tw-label">Dans 4 semaines, tu pourrais peser</div>
+ <div><span class="tw-weight" id="tw4w">—</span><span class="tw-unit">kg</span></div>
+
+ </div>
+ <button class="pbtn">Commencer — 19,99€</button>
+ </div>
+
+ <!-- 14 JOURS -->
+
+ <div class="pcard sec fu d4" onclick="goB('14j')">
+ <div class="ptop-row">
+ <div>
+ <div class="pname">14 jours pour sécher</div>
+ <div class="pdur">14 jours · Première sèche</div>
+ </div>
+ <div class="pcol">
+ <div class="pprice">14,99€</div>
+ <div class="pday">1,07€ / jour</div>
+ </div>
+ </div>
+ <div class="tw-block">
+ <div class="tw-label">Dans 14 jours, tu pourrais peser</div>
+ <div><span class="tw-weight" id="tw14">—</span><span class="tw-unit">kg</span></div>
+
+ </div>
+ <button class="pbtn">Commencer — 14,99€</button>
+ </div>
+
+ <!-- 10 JOURS -->
+
+ <div class="pcard sec fu d5" onclick="goB('10j')">
+ <div class="ptop-row">
+ <div>
+ <div class="pname">10 jours pour sécher</div>
+ <div class="pdur">10 jours · Démarrage rapide</div>
+ </div>
+ <div class="pcol">
+ <div class="pprice">10,99€</div>
+ <div class="pday">1,09€ / jour</div>
+ </div>
+ </div>
+ <div class="tw-block">
+ <div class="tw-label">Dans 10 jours, tu pourrais peser</div>
+ <div><span class="tw-weight" id="tw10">—</span><span class="tw-unit">kg</span></div>
+
+ </div>
+ <button class="pbtn">Commencer — 10,99€</button>
+ </div>
+
+ <div class="div">Pourquoi le 7 semaines ?</div>
+
+ <div class="vstack fu d6">
+ <div class="vstack-t">Le Challenge 7 semaines, c'est :</div>
+ <div class="vpt"><span class="vck">—</span><span>Une <strong>progression douce et intelligente</strong> — jamais de frustration</span></div>
+ <div class="vpt"><span class="vck">—</span><span><strong>49 jours de menus</strong> variés, gourmands, prêts à l'emploi</span></div>
+ <div class="vpt"><span class="vck">—</span><span>Des résultats que ton corps <strong>ne reprendra pas</strong></span></div>
+ <div class="vpt"><span class="vck">—</span><span>Seulement <strong>0,61€ par jour</strong> — moins qu'un café</span></div>
+ </div>
+
+ <button class="btn btn-gold" id="ctaFinal" onclick="goB('7sem')" style="margin-bottom:10px">
+ Je commence ma transformation maintenant
+ </button>
+
+ <div class="footer">
+ © Kcoaching · Tous droits réservés<br>
+ Programme nutrition uniquement — Consulte un professionnel de santé si nécessaire<br>
+ Les estimations sont à titre indicatif et basées sur les données renseignées
+ </div>
+ </div>
+</div>
+
+<script>
+ // STATE 
+ const S = { prenom:'', genre:'f', age:0, poids:0, taille:0, act:1.2 };
+ const R = {};
+ const PROG = { 0:0, 1:25, 2:55, 3:80, 4:100 };
+
+ // NAVIGATION 
+
+ function go(n) {
+ // Mémoire : pré-remplir le formulaire si on revient à l'étape 1
+ if (n === 1 && S.age) {
+ document.getElementById('prenom').value = S.prenom || '';
+ document.getElementById('age').value = S.age || '';
+ document.getElementById('poids').value = S.poids || '';
+ document.getElementById('taille').value = S.taille || '';
+ setG(S.genre || 'f');
+ const actMap = [1.2, 1.375, 1.55, 1.725];
+ const idx = actMap.indexOf(S.act);
+ if (idx >= 0) setA(idx, S.act);
+ }
+ document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+ document.getElementById('s'+n).classList.add('active');
+ document.getElementById('pgBar').style.width = PROG[n]+'%';
+ window.scrollTo({ top:0, behavior:'smooth' });
+ }
+
+ function goB(url) {
+    const urls = {
+      '7sem':  'https://shop.beacons.ai/kcoaching/5fee0cd5-b961-4699-b2c7-f73591d9bfbb?pageViewSource=lib_view&referrer=https://beacons.ai/kcoaching',
+      '4sem':  'https://shop.beacons.ai/kcoaching/8d04e33c-a3c9-4e77-8e1d-5d4faa4d15ce?pageViewSource=lib_view&referrer=https://beacons.ai/kcoaching',
+      '14j':   'https://shop.beacons.ai/kcoaching/cf28c7c7-cbad-44c6-b3cd-59419c8163d3?pageViewSource=lib_view&referrer=https://beacons.ai/kcoaching',
+      '10j':   'https://shop.beacons.ai/kcoaching/bfc42c3d-a1a0-42c9-82bc-395ddffcb3bc?pageViewSource=lib_view&referrer=https://beacons.ai/kcoaching',
+      'home':  'https://beacons.ai/kcoaching'
+    };
+    window.open(urls[url] || urls['home'], '_blank');
+  }
+
+ // FORM INTERACTIONS 
+ function setG(g) {
+ S.genre = g;
+ document.getElementById('gf').classList.toggle('on', g==='f');
+ document.getElementById('gh').classList.toggle('on', g==='h');
+ }
+
+ function setA(i, m) {
+ S.act = m;
+ for(let x=0; x<4; x++)
+ document.getElementById('a'+x).classList.toggle('on', x===i);
+ }
+
+ // VALIDATION 
+ function submit() {
+ const prenom = document.getElementById('prenom').value.trim();
+ const age = parseInt(document.getElementById('age').value);
+ const poids = parseFloat(document.getElementById('poids').value);
+ const taille = parseFloat(document.getElementById('taille').value);
+ const err = document.getElementById('ferr');
+
+ if (!age || age<18 || age>70) { showErr(' Âge valide requis (18-70 ans)'); return; }
+ if (!poids || poids<40 || poids>200) { showErr(' Poids valide requis (40-200 kg)'); return; }
+ if (!taille|| taille<140||taille>220){ showErr(' Taille valide requise (140-220 cm)'); return; }
+
+ err.style.display='none';
+ S.prenom=prenom; S.age=age; S.poids=poids; S.taille=taille;
+ saveToStorage();
+ startLoad();
+ }
+
+ function showErr(msg) {
+ const e = document.getElementById('ferr');
+ e.textContent = msg; e.style.display = 'block';
+ }
+
+ // LOADING 
+ function startLoad() {
+ go(2);
+ ['c1','c2','c3','c4'].forEach(id => document.getElementById(id).classList.remove('done'));
+ const labels = [
+ 'Calcul du métabolisme de base…',
+ 'Analyse de ta dépense énergétique…',
+ 'Calcul de ton poids de forme…',
+ 'Estimation de ta perte de poids…'
+ ];
+ const ids = ['c1','c2','c3','c4'];
+ let i = 0;
+ const iv = setInterval(() => {
+ if(i < ids.length) {
+ document.getElementById(ids[i]).classList.add('done');
+ document.getElementById('ltitle').textContent = labels[i];
+ i++;
+ } else {
+ clearInterval(iv);
+ compute();
+ setTimeout(() => { populate(); go(3); }, 400);
+ }
+ }, 650);
+ }
+
+ // CALCULATIONS 
+ function def(tdee, cal, days) { return Math.max(0, tdee-cal) * days; }
+ function kg(cals) { return Math.round(cals/7700*10)/10; }
+
+ function compute() {
+ const { genre, age, poids, taille, act } = S;
+
+ // BMR — Mifflin-St Jeor
+ let bmr = 10*poids + 6.25*taille - 5*age + (genre==='h' ? 5 : -161);
+ const tdee = Math.round(bmr * act);
+ bmr = Math.round(bmr);
+
+ // Ideal weight — BMI target
+ const hm = taille/100;
+ const bmiTgt = genre==='h' ? 23 : 21.5;
+ const ideal = Math.round(bmiTgt * hm * hm);
+ const toLose = Math.max(0, Math.round((poids-ideal)*10)/10);
+
+ // BMI
+ const bmi = Math.round(poids/(hm*hm)*10)/10;
+
+ Object.assign(R, { bmr, tdee, ideal, toLose, bmi });
+
+ // Programs 
+ // All 3-month projections = program loss + continuation at 1500 cal
+ const SUS = 1500; // sustainable continuation calories
+
+ const p10 = def(tdee,1300,10);
+ R.l10 = kg(p10);
+ R.l103 = kg(p10 + def(tdee,SUS,80));
+
+ const p14 = def(tdee,1400,14);
+ R.l14 = kg(p14);
+ R.l143 = kg(p14 + def(tdee,SUS,76));
+
+ const p4w = def(tdee,1400,28);
+ R.l4w = kg(p4w);
+ R.l4w3 = kg(p4w + def(tdee,SUS,62));
+
+ // 7 weeks progressive
+ const p7w = def(tdee,1300,7) + def(tdee,1400,14) + def(tdee,1500,28);
+ R.l7w = kg(p7w);
+ R.l7w3 = kg(p7w + def(tdee,SUS,41)); // 90 - 49 = 41 remaining days
+ }
+
+ // POPULATE 
+ function populate() {
+ const name = S.prenom;
+ const poids = S.poids;
+ const { bmr, tdee, ideal, toLose, bmi } = R;
+
+ // Helper: target weight display
+ const tw = loss => {
+ const v = Math.round((poids - loss) * 10) / 10;
+ return v % 1 === 0 ? v.toFixed(0) : v.toFixed(1);
+ };
+
+ // Step 3 
+ document.getElementById('resH').textContent =
+ name ? `${name}, voici tes données ` : 'Voici tes données ';
+
+ // Vision card
+ const w3m = Math.round((poids - R.l7w3) * 10) / 10;
+ document.getElementById('visionW').textContent = Math.round(w3m);
+ document.getElementById('visionSub').textContent =
+ `soit ${R.l7w3} kg de moins qu'aujourd'hui`;
+ document.getElementById('vjNow').textContent = poids + ' kg';
+ document.getElementById('vjGoal').textContent = ideal + ' kg';
+ const fillPct = Math.min(80, toLose > 0 ? Math.round((R.l7w3 / toLose) * 80) : 40);
+ setTimeout(() => {
+ const f = document.getElementById('vjFill');
+ if(f) f.style.width = fillPct + '%';
+ }, 400);
+
+ // Ring — BMR | TDEE (donut) | IMC
+ document.getElementById('mBmr').textContent = bmr.toLocaleString('fr-FR');
+ document.getElementById('mTdee').textContent = tdee.toString();
+ document.getElementById('mImc').textContent  = bmi.toFixed(1);
+
+ // Ring animation — arc 270° ouvert
+ const fillArc = Math.round(Math.min(0.85, bmr / tdee) * 270);
+ setTimeout(() => {
+ const arc = document.getElementById('ringArc');
+ if (arc) arc.style.strokeDasharray = `${fillArc} ${360 - fillArc}`;
+ }, 400);
+
+ // Cartes poids de forme + objectif
+ document.getElementById('msIdeal').textContent = ideal;
+ const goalFmt = toLose % 1 === 0 ? toLose.toFixed(0) : toLose.toFixed(1);
+ document.getElementById('msGoal').textContent  = goalFmt;
+
+ // Empathy block — message personnalisé selon le profil
+ document.getElementById('empathyTxt').innerHTML = getEmpathyText(
+   name, tdee, bmr, bmi, toLose, S.genre, S.age, S.act
+ );
+
+ // Step 4 
+ document.getElementById('progH').textContent =
+ name ? `${name}, choisis ton rythme` : 'Choisis ton rythme';
+ document.getElementById('progS').textContent =
+ name
+ ? `${name} — voici à quel poids tu pourrais arriver`
+ : 'Voici à quel poids tu pourrais arriver';
+
+ // Poids cible fin de programme (un seul chiffre par carte)
+ document.getElementById('tw7w').textContent = tw(R.l7w);
+ document.getElementById('tw4w').textContent = tw(R.l4w);
+ document.getElementById('tw14').textContent = tw(R.l14);
+ document.getElementById('tw10').textContent = tw(R.l10);
+
+ // Dynamic CTAs
+ const prefix = name ? `${name}, je` : 'Je';
+ const target3m = tw(R.l7w3);
+ document.getElementById('cta7w').textContent =
+ `${prefix} vise ${target3m} kg — Je commence`;
+ document.getElementById('ctaFinal').textContent =
+ ` ${prefix} veux peser ${target3m} kg — Commencer maintenant`;
+
+
+ }
+
+ // COUNTER ANIMATION 
+ function count(id, target, duration, dec, locale) {
+ const el = document.getElementById(id);
+ const t0 = performance.now();
+ (function step(now) {
+ const p = Math.min((now-t0)/duration, 1);
+ const ease = 1 - Math.pow(1-p, 3);
+ const val = target * ease;
+ el.textContent = dec > 0
+ ? val.toFixed(dec)
+ : locale
+ ? Math.round(val).toLocaleString('fr-FR')
+ : Math.round(val).toString();
+ if (p < 1) requestAnimationFrame(step);
+ else el.textContent = dec > 0
+ ? target.toFixed(dec)
+ : locale
+ ? target.toLocaleString('fr-FR')
+ : target.toString();
+ })(t0);
+ }
+
+ // ═══════════ MESSAGES PERSONNALISÉS ═══════════
+ function getEmpathyText(name, tdee, bmr, bmi, toLose, genre, age, act) {
+   const n    = name || '';
+   const sujet = n ? n : (genre === 'h' ? 'Ton corps' : 'Ton corps');
+   const brule = n ? `${n} brûle` : 'Ton corps brûle';
+   const tu   = n ? n : 'tu';
+   const T    = tdee.toLocaleString('fr-FR');
+   const B    = bmr.toLocaleString('fr-FR');
+   const isFemme    = genre === 'f';
+   const isMidAge   = age >= 35 && age <= 52;
+   const isSenior   = age > 52;
+   const isSed      = act <= 1.2;
+   const isLight    = act === 1.375;
+   const isModerate = act === 1.55;
+   const isActive   = act >= 1.725;
+   const isObese    = bmi >= 30;
+   const isOverw    = bmi >= 25 && bmi < 30;
+   const fewKg      = toLose <= 5;
+   const manyKg     = toLose >= 12;
+
+   // ── Scénario 1 : Très actif·ve + stagnation ──
+   if (isActive && (isOverw || isObese)) {
+     return `${brule} <strong>${T} calories par jour</strong> grâce à son activité — c'est un très bon point. Pourtant la balance ne bouge plus. C'est le <strong>paradoxe sportif</strong> : le corps s'adapte et compense inconsciemment les calories dépensées. La solution n'est pas de s'entraîner plus, mais de manger avec <strong>la précision qu'il faut</strong>.`;
+   }
+
+   // ── Scénario 2 : Sédentaire + beaucoup à perdre ──
+   if (isSed && manyKg) {
+     return `${brule} <strong>${T} calories par jour</strong>, dont ${B} cal rien qu'au repos. Avec ${toLose} kg à perdre, le corps est en <strong>mode stockage chronique</strong> : il perçoit chaque restriction comme une menace et ralentit le métabolisme. Kcoaching rompt ce cycle avec un déficit progressif calibré au gramme près.`;
+   }
+
+   // ── Scénario 3 : Sédentaire + peu à perdre ──
+   if (isSed && fewKg) {
+     return `${brule} <strong>${T} calories par jour</strong> — un métabolisme en mode économie. Avec seulement ${toLose} kg à perdre, la marge est très fine : un léger excès suffit à tout bloquer. C'est pourquoi la <strong>précision du déficit est critique</strong>, et une méthode générique ne fonctionnera jamais ici.`;
+   }
+
+   // ── Scénario 4 : Femme + mi-âge + surpoids ──
+   if (isFemme && isMidAge && (isOverw || isObese)) {
+     return `${n ? n + ' brûle' : 'Ton métabolisme brûle'} <strong>${T} calories par jour</strong>. Entre 35 et 50 ans, les fluctuations hormonales modifient la façon dont le corps stocke les graisses — particulièrement au niveau abdominal. Ce n'est pas un manque de discipline, c'est de la <strong>biologie</strong>. Kcoaching adapte les apports à cette réalité.`;
+   }
+
+   // ── Scénario 5 : Femme + senior + surpoids ──
+   if (isFemme && isSenior && (isOverw || isObese)) {
+     return `${brule} <strong>${T} calories par jour</strong>. Après 50 ans, le métabolisme ralentit naturellement de 5 à 10% par décennie. Ce que tu faisais avant ne produit plus les mêmes résultats — et ce n'est pas normal de te forcer plus. <strong>La méthode doit changer, pas toi</strong>.`;
+   }
+
+   // ── Scénario 6 : Homme + actif + beaucoup à perdre ──
+   if (!isFemme && (isModerate || isActive) && manyKg) {
+     return `${brule} <strong>${T} calories par jour</strong> — un bon métabolisme. Le problème avec ${toLose} kg à perdre : une restriction trop agressive détruit la masse musculaire avant la graisse. Kcoaching calibre le déficit pour <strong>préserver le muscle et cibler uniquement la graisse</strong>.`;
+   }
+
+   // ── Scénario 7 : Modérément actif·ve + quelques kilos ──
+   if (isModerate && !fewKg && !manyKg) {
+     return `${brule} <strong>${T} calories par jour</strong> avec une activité régulière. ${toLose} kg à perdre, c'est le <strong>terrain le plus difficile</strong> : assez pour ressentir le problème, pas assez pour que les méthodes standard fonctionnent. La précision du déficit fait toute la différence ici.`;
+   }
+
+   // ── Scénario 8 : Légèrement actif·ve + tous profils ──
+   if (isLight) {
+     return `${brule} <strong>${T} calories par jour</strong> en tenant compte de ton activité, et ${B} cal au repos. L'écart entre les deux — <strong>${(tdee - bmr).toLocaleString('fr-FR')} cal</strong> — est la fenêtre où Kcoaching agit : un déficit structuré qui respecte ton rythme de vie sans te priver.`;
+   }
+
+   // ── Message par défaut amélioré ──
+   return `${brule} <strong>${T} calories par jour</strong> en activité, et ${B} cal au repos. Le problème n'est pas le manque de volonté — c'est l'absence de <strong>méthode adaptée à TON profil</strong>. Kcoaching crée le déficit exact qu'il faut, au bon rythme, pour des résultats durables.`;
+ }
+
+ // ═══════════ LOCALSTORAGE — MÉMOIRE PERSISTANTE ═══════════
+ const STORAGE_KEY = 'kcoaching_profil';
+
+ function saveToStorage() {
+   try {
+     localStorage.setItem(STORAGE_KEY, JSON.stringify({
+       prenom: S.prenom, genre: S.genre,
+       age: S.age, poids: S.poids,
+       taille: S.taille, act: S.act
+     }));
+   } catch(e) {}
+ }
+
+ function loadFromStorage() {
+   try {
+     const raw = localStorage.getItem(STORAGE_KEY);
+     if (!raw) return;
+     const d = JSON.parse(raw);
+     if (!d.age || !d.poids || !d.taille) return;
+
+     // Restaurer l'état
+     Object.assign(S, d);
+
+     // Pré-remplir le formulaire
+     document.getElementById('prenom').value = d.prenom || '';
+     document.getElementById('age').value    = d.age;
+     document.getElementById('poids').value  = d.poids;
+     document.getElementById('taille').value = d.taille;
+     setG(d.genre || 'f');
+     const actMap = [1.2, 1.375, 1.55, 1.725];
+     const idx = actMap.indexOf(d.act);
+     if (idx >= 0) setA(idx, d.act);
+
+     // Afficher le bouton "Reprendre" sur le hero
+     const btn = document.getElementById('btnReprendre');
+     if (btn) {
+       const name = d.prenom ? `, ${d.prenom}` : '';
+       btn.textContent = `Reprendre mon analyse${name} →`;
+       btn.style.display = 'flex';
+     }
+   } catch(e) {}
+ }
+
+ function resumeAnalysis() {
+   // Recalculer et aller directement aux résultats
+   compute();
+   populate();
+   go(3);
+ }
+
+ function clearStorage() {
+   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+   document.getElementById('btnReprendre').style.display = 'none';
+ }
+
+ // Initialisation
+ loadFromStorage();
+</script>
 
 </body>
 </html>
