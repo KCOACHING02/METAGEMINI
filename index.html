@@ -704,6 +704,35 @@ color:#9AA5B4; margin-top:4px; display:block;
 }
 .metric-solo.accent .ms-unit { color:rgba(255,255,255,.75); }
 
+/* PROJECTION NARRATIVE */
+.projection-card {
+background:#fff; border:1.5px solid #EBEBEB;
+border-radius:18px; padding:18px 16px;
+margin-bottom:12px; box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+.proj-timeline {
+display:flex; align-items:center;
+justify-content:space-between;
+margin-bottom:14px; gap:4px;
+}
+.proj-step { text-align:center; flex:1; }
+.proj-step-label {
+font-size:10px; color:#9AA5B4; text-transform:uppercase;
+letter-spacing:.5px; display:block; margin-bottom:4px;
+}
+.proj-step-val {
+font-family:‘Nunito’, sans-serif; font-size:20px;
+font-weight:900; color:#1C2B3A; display:block; line-height:1;
+}
+.proj-step-unit { font-size:11px; color:#aaa; }
+.proj-step.goal .proj-step-val { color:#2BAE8E; font-size:22px; }
+.proj-step.goal .proj-step-label { color:#2BAE8E; }
+.proj-arrow { color:#ccc; font-size:18px; flex-shrink:0; }
+.proj-narrative {
+background:#F0FBF8; border-radius:10px; padding:12px 14px;
+font-size:13.5px; line-height:1.6; color:#444;
+}
+.proj-narrative strong { color:#2BAE8E; }
 /* RING COMPONENT (Yazio exact) */
 .ring-section {
 display:flex; align-items:center;
@@ -959,30 +988,7 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  <h2 class="res-h" id="resH">Voici tes données </h2>
  </div>
 
- <div class="vision-card fu d2">
- <div class="vision-label">Dans 3 mois, tu pourrais peser</div>
- <div>
- <span class="vision-weight" id="visionW">—</span>
- <span class="vision-unit">kg</span>
- </div>
- <div class="vision-sub" id="visionSub">soit X kg de moins</div>
- <div class="vision-journey">
- <div class="vj-side">
- <span class="vj-w" id="vjNow">—</span>
- <span class="vj-lbl">Aujourd'hui</span>
- </div>
- <div class="vj-bar">
- <div class="vj-track"><div class="vj-fill" id="vjFill"></div></div>
- <div class="vj-txt">ta transformation</div>
- </div>
- <div class="vj-side">
- <span class="vj-w gr" id="vjGoal">—</span>
- <span class="vj-lbl">Objectif</span>
- </div>
- </div>
- </div>
-
- <div class="ring-section fu d3">
+ <div class="ring-section fu d2">
  <div class="ring-side">
  <span class="ring-side-val" id="mBmr">—</span>
  <span class="ring-side-lbl">Métabolisme<br>au repos (cal)</span>
@@ -998,12 +1004,13 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  </div>
  </div>
  <div class="ring-side">
+ <span class="ring-side-lbl" style="margin-bottom:3px;">IMC</span>
  <span class="ring-side-val" id="mImc">—</span>
- <span class="ring-side-lbl">Indice de<br>masse corp.</span>
+ <span class="ring-side-lbl" id="mImcCat">Indice de<br>masse corp.</span>
  </div>
  </div>
 
- <div class="metrics-duo fu d4">
+ <div class="metrics-duo fu d3">
  <div class="metric-solo">
  <div class="ms-label">Poids de forme conseillé</div>
  <div class="ms-val" id="msIdeal">—</div>
@@ -1016,9 +1023,28 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  </div>
  </div>
 
- <div class="empathy-card fu d5" style="animation-delay:.4s;opacity:0">
+ <div class="projection-card fu d4">
+  <div class="proj-timeline">
+   <div class="proj-step">
+    <span class="proj-step-label">Aujourd'hui</span>
+    <span class="proj-step-val" id="projNow">—</span>
+    <span class="proj-step-unit">kg</span>
+   </div>
+   <div class="proj-arrow">&#8594;</div>
+   <div class="proj-step goal">
+    <span class="proj-step-label">Poids de forme</span>
+    <span class="proj-step-val" id="projIdeal">—</span>
+    <span class="proj-step-unit">kg</span>
+   </div>
+  </div>
+  <p class="proj-narrative" id="projNarrative">…</p>
+ </div>
+
+ <div class="empathy-card fu d5">
  <div class="empathy-title">Ce n'est pas ta faute si tu stagnes</div>
  <p class="empathy-txt" id="empathyTxt">…</p>
+ </div>
+
  </div>
 
  <div class="fu d6">
@@ -1068,12 +1094,12 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
    </div>
    <div class="pt-arrow">&#8594;</div>
    <div class="pt-step highlight">
-    <span class="pt-label">3 mois</span>
+    <span class="pt-label">Poids de forme</span>
     <span class="pt-weight" id="ptTarget">—</span>
     <span class="pt-unit" style="color:rgba(255,255,255,.8);">kg</span>
    </div>
   </div>
-  <div class="pt-note">En suivant le programme sur 3 mois complets</div>
+  <div class="pt-note" id="ptNote">En suivant le programme sur 3 mois complets</div>
  </div>
 
 <button type="button" class="pbtn" id="cta7w" onclick="goB('7sem')">Commencer mon programme — 29,99€</button>
@@ -1319,26 +1345,26 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  };
 
  // Step 3 
- document.getElementById('resH').textContent =
- name ? `${name}, voici tes données ` : 'Voici tes données ';
+ document.getElementById('resH').textContent = 'Voici tes données';
 
- // Vision card
- const w3m = Math.round((poids - R.l7w3) * 10) / 10;
- document.getElementById('visionW').textContent = Math.round(w3m);
- document.getElementById('visionSub').textContent =
- `soit ${R.l7w3} kg de moins qu'aujourd'hui`;
- document.getElementById('vjNow').textContent = poids + ' kg';
- document.getElementById('vjGoal').textContent = ideal + ' kg';
- const fillPct = Math.min(80, toLose > 0 ? Math.round((R.l7w3 / toLose) * 80) : 40);
- setTimeout(() => {
- const f = document.getElementById('vjFill');
- if(f) f.style.width = fillPct + '%';
- }, 400);
-
- // Ring — BMR | TDEE (donut) | IMC
+ // Ring — BMR | TDEE (donut) | IMC coloré
  document.getElementById('mBmr').textContent = bmr.toLocaleString('fr-FR');
  document.getElementById('mTdee').textContent = tdee.toString();
- document.getElementById('mImc').textContent  = bmi.toFixed(1);
+ const imcEl = document.getElementById('mImc');
+ imcEl.textContent = bmi.toFixed(1);
+ let imcColor, imcCatText;
+ if (bmi < 18.5) {
+   imcColor = '#e74c3c'; imcCatText = 'Insuffisance\npondérale';
+ } else if (bmi < 25) {
+   imcColor = '#22A85D'; imcCatText = 'Poids\nnormal';
+ } else if (bmi < 30) {
+   imcColor = '#F0A500'; imcCatText = 'Surpoids';
+ } else {
+   imcColor = '#e74c3c'; imcCatText = 'Obésité';
+ }
+ imcEl.style.color = imcColor;
+ const imcCatEl = document.getElementById('mImcCat');
+ if (imcCatEl) imcCatEl.textContent = imcCatText;
 
  // Ring animation — arc 270° ouvert
  const fillArc = Math.round(Math.min(0.85, bmr / tdee) * 270);
@@ -1351,6 +1377,34 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  document.getElementById('msIdeal').textContent = ideal;
  const goalFmt = toLose % 1 === 0 ? toLose.toFixed(0) : toLose.toFixed(1);
  document.getElementById('msGoal').textContent  = goalFmt;
+
+ // Projection narrative — calcul du délai réaliste
+ const dailyDeficit = Math.max(0, tdee - 1500);
+ const weeksToGoal = dailyDeficit > 0
+   ? Math.round((toLose * 7700) / (dailyDeficit * 7))
+   : null;
+ const durationLabel = weeksToGoal && weeksToGoal > 0
+   ? (weeksToGoal >= 8 ? `${Math.round(weeksToGoal / 4.3)} mois` : `${weeksToGoal} semaines`)
+   : null;
+
+ document.getElementById('projNow').textContent   = poids;
+ document.getElementById('projIdeal').textContent = ideal;
+ const projEl = document.getElementById('projNarrative');
+ if (durationLabel && toLose > 0) {
+   projEl.innerHTML = `Avec un rééquilibrage alimentaire adapté à ton métabolisme, tu pourrais atteindre ton poids de forme de <strong>${ideal} kg</strong> en environ <strong>${durationLabel}</strong>. Le programme 7 semaines te donne le cadre pour démarrer et tenir dans la durée.`;
+ } else if (toLose <= 0) {
+   projEl.innerHTML = `Tu es déjà proche de ton poids de forme. Le programme 7 semaines t'aide à <strong>affiner et stabiliser</strong> tes résultats dans le temps.`;
+ } else {
+   projEl.innerHTML = `Avec un rééquilibrage alimentaire structuré, tu peux progressivement atteindre ton poids de forme de <strong>${ideal} kg</strong>.`;
+ }
+
+ // Step 4 timeline note — même durée que Step 3
+ const ptNote = document.getElementById('ptNote');
+ if (ptNote) {
+   ptNote.textContent = durationLabel
+     ? `Le programme 7 semaines lance ta transformation — objectif atteint en ${durationLabel}`
+     : 'Le programme 7 semaines lance ta transformation vers ton poids de forme';
+ }
 
  // Empathy block — message personnalisé selon le profil
  document.getElementById('empathyTxt').innerHTML = getEmpathyText(
@@ -1373,8 +1427,8 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
 
  // Dynamic CTAs
  const target3m = tw(R.l7w3);
- document.getElementById('ptNow').textContent = S.poids;
- document.getElementById('ptTarget').textContent = target3m;
+ document.getElementById('ptNow').textContent    = poids;
+ document.getElementById('ptTarget').textContent = ideal;
  document.getElementById('ctaFinal').textContent =
   `Je veux peser ${target3m} kg — Commencer maintenant`;
 
