@@ -1055,11 +1055,6 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
   <p class="proj-narrative" id="projNarrative">…</p>
  </div>
 
- <div class="empathy-card">
- <div class="empathy-title">Ce n'est pas ta faute si tu stagnes</div>
- <p class="empathy-txt" id="empathyTxt">…</p>
- </div>
-
  </div>
  </div>
 </div>
@@ -1437,11 +1432,6 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  if (ptTargetLabel) {
    ptTargetLabel.textContent = durationLabel ? `dans ${durationLabel}` : 'Poids de forme';
  }
-
- // Empathy block — message personnalisé selon le profil
- document.getElementById('empathyTxt').innerHTML = getEmpathyText(
-   name, tdee, bmr, bmi, toLose, S.genre, S.age, S.act
- );
 
  // Step 4 
  document.getElementById('progH').textContent =
