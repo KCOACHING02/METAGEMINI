@@ -843,27 +843,6 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
 
   <div class="cta-sub">Gratuit · 2 minutes · Sans inscription</div>
 
-  <div class="proof">
-    <span class="stars">★★★★★</span>
-    Plus de 500 clientes ont perdu en moyenne 7 kg
-  </div>
-
-  <div class="strip">
-    <div class="strip-item">
-      <div class="strip-num">-7 kg</div>
-      <div class="strip-lbl">en moyenne</div>
-    </div>
-    <div class="strip-sep"></div>
-    <div class="strip-item">
-      <div class="strip-num">7 sem.</div>
-      <div class="strip-lbl">challenge star</div>
-    </div>
-    <div class="strip-sep"></div>
-    <div class="strip-item">
-      <div class="strip-num">100%</div>
-      <div class="strip-lbl">nutrition</div>
-    </div>
-  </div>
  </div>
  </div>
  </div>
@@ -1023,7 +1002,13 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  </div>
  </div>
 
- <div class="projection-card fu d4">
+ <div class="fu d5" style="margin-bottom:12px;">
+ <button type="button" class="btn btn-gold" onclick="go(4)">
+ Voir mon programme personnalisé →
+ </button>
+ </div>
+
+ <div class="projection-card fu d6">
   <div class="proj-timeline">
    <div class="proj-step">
     <span class="proj-step-label">Aujourd'hui</span>
@@ -1040,17 +1025,11 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
   <p class="proj-narrative" id="projNarrative">…</p>
  </div>
 
- <div class="empathy-card fu d5">
+ <div class="empathy-card">
  <div class="empathy-title">Ce n'est pas ta faute si tu stagnes</div>
  <p class="empathy-txt" id="empathyTxt">…</p>
  </div>
 
- </div>
-
- <div class="fu d6">
- <button type="button" class="btn btn-or" onclick="go(4)">
- Voir mon programme personnalisé →
- </button>
  </div>
  </div>
 </div>
@@ -1094,20 +1073,18 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
    </div>
    <div class="pt-arrow">&#8594;</div>
    <div class="pt-step highlight">
-    <span class="pt-label">Poids de forme</span>
+    <span class="pt-label" id="ptTargetLabel">Objectif</span>
     <span class="pt-weight" id="ptTarget">—</span>
     <span class="pt-unit" style="color:rgba(255,255,255,.8);">kg</span>
    </div>
   </div>
-  <div class="pt-note" id="ptNote">En suivant le programme sur 3 mois complets</div>
  </div>
 
 <button type="button" class="pbtn" id="cta7w" onclick="goB('7sem')">Commencer mon programme — 29,99€</button>
 
- <div class="guar">
- <span>Menus équilibrés · Sans privation · Résultats durables</span>
- </div>
- <div class="value-anchor">Le programme le plus complet · Seulement 0,61€/jour</div>
+ <p style="text-align:center;font-size:12px;color:#9AA5B4;margin-top:10px;line-height:1.5;">
+   Le programme 7 semaines peut être renouvelé jusqu'à l'atteinte de ton objectif.
+ </p>
  </div>
 
  <div class="pcard sec fu d3" onclick="goB('4sem')">
@@ -1398,12 +1375,10 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
    projEl.innerHTML = `Avec un rééquilibrage alimentaire structuré, tu peux progressivement atteindre ton poids de forme de <strong>${ideal} kg</strong>.`;
  }
 
- // Step 4 timeline note — même durée que Step 3
- const ptNote = document.getElementById('ptNote');
- if (ptNote) {
-   ptNote.textContent = durationLabel
-     ? `Le programme 7 semaines lance ta transformation — objectif atteint en ${durationLabel}`
-     : 'Le programme 7 semaines lance ta transformation vers ton poids de forme';
+ // Step 4 timeline — label dynamique avec durée
+ const ptTargetLabel = document.getElementById('ptTargetLabel');
+ if (ptTargetLabel) {
+   ptTargetLabel.textContent = durationLabel ? `dans ${durationLabel}` : 'Poids de forme';
  }
 
  // Empathy block — message personnalisé selon le profil
@@ -1430,7 +1405,7 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  document.getElementById('ptNow').textContent    = poids;
  document.getElementById('ptTarget').textContent = ideal;
  document.getElementById('ctaFinal').textContent =
-  `Je veux peser ${target3m} kg — Commencer maintenant`;
+  `Je veux peser ${ideal} kg — Commencer maintenant`;
 
 
  }
