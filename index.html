@@ -1175,6 +1175,9 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  if (!taille|| taille<140||taille>220){ showErr(' Taille valide requise (140-220 cm)'); return; }
 
  err.style.display='none';
+ S.age    = age;
+ S.poids  = poids;
+ S.taille = taille;
  saveToStorage();
  startLoad();
  }
