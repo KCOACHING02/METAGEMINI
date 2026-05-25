@@ -810,13 +810,13 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
 
   <!-- CTA + sous-texte de réassurance -->
 
-  <button class="btn btn-or btn-pulse" onclick="go(1)">
+  <button class="btn btn-or btn-pulse" id="btnStart">
     Calculer mon métabolisme
   </button>
 
   <!-- Bouton "Reprendre" — visible uniquement si données sauvegardées -->
 
-  <button class="btn btn-reprendre" id="btnReprendre" onclick="resumeAnalysis()" style="display:none">
+  <button class="btn btn-reprendre" id="btnReprendre" id="btnReprendre" style="display:none">
     Reprendre mon analyse →
   </button>
 
@@ -878,8 +878,8 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  <div class="fg">
  <label class="fl"> Je suis…</label>
  <div class="gender-row">
- <button class="gbtn on" id="gf" onclick="setG('f')"> Femme</button>
- <button class="gbtn" id="gh" onclick="setG('h')"> Homme</button>
+ <button class="gbtn on" id="gf" id="btnFemme"> Femme</button>
+ <button class="gbtn" id="gh" id="btnHomme"> Homme</button>
  </div>
  </div>
 
@@ -921,25 +921,25 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  <div class="fg">
  <label class="fl"> Mon niveau d'activité au quotidien</label>
  <div class="act-list">
- <div class="act-item on" id="a0" onclick="setA(0,1.2)">
+ <div class="act-item on" id="a0" data-idx="0" data-act="1.2">
   <div class="act-txt">
  <strong>Sédentaire</strong>
  <small>Bureau, peu de mouvement</small>
  </div>
  </div>
- <div class="act-item" id="a1" onclick="setA(1,1.375)">
+ <div class="act-item" id="a1" data-idx="1" data-act="1.375">
   <div class="act-txt">
  <strong>Légèrement actif</strong>
  <small>Marche quotidienne</small>
  </div>
  </div>
- <div class="act-item" id="a2" onclick="setA(2,1.55)">
+ <div class="act-item" id="a2" data-idx="2" data-act="1.55">
   <div class="act-txt">
  <strong>Modérément actif</strong>
  <small>Sport 2-3× par semaine</small>
  </div>
  </div>
- <div class="act-item" id="a3" onclick="setA(3,1.725)">
+ <div class="act-item" id="a3" data-idx="3" data-act="1.725">
   <div class="act-txt">
  <strong>Très actif</strong>
  <small>Sport intensif 4-5× par semaine</small>
@@ -950,7 +950,7 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
 
  <div class="err" id="ferr"></div>
 
- <button class="btn btn-or" onclick="submit()">
+ <button class="btn btn-or" id="btnSubmit">
  Analyser mon métabolisme →
  </button>
  </div>
@@ -996,7 +996,7 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  <div class="logo">K<b>coaching</b></div>
 
  <div class="res-top fu d1">
- <div class="tag">Ton analyse personnalisée · <span onclick="go(1)" style="color:var(--orange);cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Modifier</span></div>
+ <div class="tag">Ton analyse personnalisée · <span id="btnModifier" style="color:var(--orange);cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Modifier</span></div>
  <h2 class="res-h" id="resH">Voici tes données </h2>
  </div>
 
@@ -1071,7 +1071,7 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  </div>
 
  <div class="fu d6">
- <button class="btn btn-or" onclick="go(4)">
+ <button class="btn btn-or" id="btnSeeProgs">
  Voir mon programme personnalisé →
  </button>
  </div>
@@ -1094,7 +1094,7 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
 
  <!-- 7 SEMAINES — BEST SELLER -->
 
- <div class="pcard star fu d2" onclick="goB('7sem')">
+ <div class="pcard star fu d2" data-prog="7sem">
  <div class="star-tag">BEST-SELLER — Le plus complet</div>
  <br>
  <div class="ptop-row">
@@ -1114,7 +1114,7 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
 
  </div>
 
-<button class="pbtn" id="cta7w" onclick="goB('7sem'); event.stopPropagation()">Je commence — 29,99€</button>
+<button class="pbtn" id="cta7w">Je commence — 29,99€</button>
 
  <div class="guar">
  <span>Menus équilibrés · Sans privation · Résultats durables</span>
@@ -1124,7 +1124,7 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
 
  <!-- 4 SEMAINES -->
 
- <div class="pcard sec fu d3" onclick="goB('4sem')">
+ <div class="pcard sec fu d3" data-prog="4sem">
  <div class="ptop-row">
  <div>
  <div class="pname">Challenge 4 semaines</div>
@@ -1145,7 +1145,7 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
 
  <!-- 14 JOURS -->
 
- <div class="pcard sec fu d4" onclick="goB('14j')">
+ <div class="pcard sec fu d4" data-prog="14j">
  <div class="ptop-row">
  <div>
  <div class="pname">14 jours pour sécher</div>
@@ -1166,7 +1166,7 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
 
  <!-- 10 JOURS -->
 
- <div class="pcard sec fu d5" onclick="goB('10j')">
+ <div class="pcard sec fu d5" data-prog="10j">
  <div class="ptop-row">
  <div>
  <div class="pname">10 jours pour sécher</div>
@@ -1195,7 +1195,7 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
  <div class="vpt"><span class="vck">—</span><span>Seulement <strong>0,61€ par jour</strong> — moins qu'un café</span></div>
  </div>
 
- <button class="btn btn-gold" id="ctaFinal" onclick="goB('7sem')" style="margin-bottom:10px">
+ <button class="btn btn-gold" id="ctaFinal" style="margin-bottom:10px">
  Je commence ma transformation maintenant
  </button>
 
@@ -1569,6 +1569,52 @@ font-size:9.5px; color:#C5CAD3; margin-top:5px;
 
  // Initialisation
  loadFromStorage();
+
+ // ═══════════ EVENT LISTENERS (plus fiables que onclick=) ═══════════
+ document.addEventListener('DOMContentLoaded', function() {});
+ // (Le script est en fin de body, le DOM est déjà prêt)
+
+ // Hero
+ var btnStart = document.getElementById('btnStart');
+ if (btnStart) btnStart.addEventListener('click', function() { go(1); });
+
+ var btnReprendre = document.getElementById('btnReprendre');
+ if (btnReprendre) btnReprendre.addEventListener('click', resumeAnalysis);
+
+ // Formulaire
+ var btnFemme = document.getElementById('btnFemme');
+ if (btnFemme) btnFemme.addEventListener('click', function() { setG('f'); });
+
+ var btnHomme = document.getElementById('btnHomme');
+ if (btnHomme) btnHomme.addEventListener('click', function() { setG('h'); });
+
+ document.querySelectorAll('[data-act]').forEach(function(el) {
+   el.addEventListener('click', function() {
+     setA(parseInt(el.dataset.idx), parseFloat(el.dataset.act));
+   });
+ });
+
+ var btnSubmit = document.getElementById('btnSubmit');
+ if (btnSubmit) btnSubmit.addEventListener('click', submit);
+
+ var btnModifier = document.getElementById('btnModifier');
+ if (btnModifier) btnModifier.addEventListener('click', function() { go(1); });
+
+ var btnSeeProgs = document.getElementById('btnSeeProgs');
+ if (btnSeeProgs) btnSeeProgs.addEventListener('click', function() { go(4); });
+
+ // Programme cards
+ document.querySelectorAll('[data-prog]').forEach(function(card) {
+   card.addEventListener('click', function() { goB(card.dataset.prog); });
+ });
+
+ var cta7w = document.getElementById('cta7w');
+ if (cta7w) cta7w.addEventListener('click', function(e) {
+   e.stopPropagation(); goB('7sem');
+ });
+
+ var ctaFinal = document.getElementById('ctaFinal');
+ if (ctaFinal) ctaFinal.addEventListener('click', function() { goB('7sem'); });
 </script>
 
 </body>
